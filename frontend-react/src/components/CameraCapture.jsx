@@ -87,7 +87,7 @@ export default function CameraCapture({ onDataExtracted, onClose }) {
             const res = await fetch(`${API_BASE}/api/ocr/extract`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image_base64: base64 }),
+                body: JSON.stringify({ image: base64, mime_type: 'image/jpeg' }),
             });
             if (!res.ok) throw new Error(`Server error ${res.status}`);
             const data = await res.json();
