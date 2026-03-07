@@ -1,9 +1,14 @@
 services:
   - type: web
-    name: medgardian-backend
+    name: dr-deepak-backend
     env: python
+    rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10.0
+        value: "3.11.0"
+      - key: DATABASE_URL
+        sync: false        # set this manually in Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false        # optional — for camera OCR feature
