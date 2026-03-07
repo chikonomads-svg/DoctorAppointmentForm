@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { checkHealth, savePrescription, getPrescription, deletePrescription } from './api';
 import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import CameraCapture from './components/CameraCapture';
 import PatientInfo from './components/PatientInfo';
 import Comorbidities from './components/Comorbidities';
@@ -68,11 +69,27 @@ export default function App() {
         return () => clearInterval(iv);
     }, []);
 
-    const handleLogin = (u) => setUser(u);
+    // ── View state: 'dashboard' | 'form' ─────────────────────────────────────
+    const [view, setView] = useState('dashboard');
+
+    const handleLogin = (u) => { setUser(u); setView('dashboard'); };
 
     const handleLogout = () => {
         sessionStorage.removeItem('dd_user');
-        setUser(null);
+        setUser(null); setView('dashboard');
+    };
+
+    // Enter form, optionally loading a specific patient record
+    const handleEnterForm = async (id) => {
+        if (id && typeof id === 'string' && id !== 'new') {
+            try {
+                const p = await getPrescription(id);
+                if (p) { setData(p); setCurrentId(p.id); }
+            } catch { /* ignore */ }
+        } else {
+            setData(EMPTY()); setCurrentId(null);
+        }
+        setView('form');
     };
 
     const handleSave = async () => {
@@ -148,9 +165,26 @@ export default function App() {
     // ── Gate: show login if not authenticated ────────────────────────────────
     if (!user) return <Login onLogin={handleLogin} />;
 
+    // ── Dashboard view ───────────────────────────────────────────────────────
+    if (view === 'dashboard') {
+        return (
+            <>
+                <Toast />
+                <Dashboard
+                    user={user}
+                    onEnterForm={handleEnterForm}
+                    onLogout={handleLogout}
+                />
+            </>
+        );
+    }
+
     // ── Toolbar buttons shared between header and bottom bar ──────────────────
     const toolbarActions = (
         <>
+            <button className="btn btn-ghost" onClick={() => setView('dashboard')} title="Back to Dashboard">
+                🏠 Dashboard
+            </button>
             <button className="btn btn-camera" id="btn-camera" onClick={() => setShowCamera(true)}>
                 📷 Scan
             </button>

@@ -4,17 +4,14 @@ const isLocalhost =
     window.location.hostname === '127.0.0.1' ||
     window.location.protocol === 'file:';
 
-export const API_BASE = isLocalhost
-    ? 'http://localhost:8000/api/prescriptions'
-    : 'https://your-render-backend-url.onrender.com/api/prescriptions';
+const BASE_HOST = isLocalhost
+    ? 'http://localhost:8000'
+    : (import.meta.env.VITE_API_URL || 'https://your-render-backend-url.onrender.com');
 
-export const MEDICINE_API = isLocalhost
-    ? 'http://localhost:8000/api/medicine/search'
-    : 'https://your-render-backend-url.onrender.com/api/medicine/search';
-
-export const HEALTH_URL = isLocalhost
-    ? 'http://localhost:8000/health'
-    : 'https://your-render-backend-url.onrender.com/health';
+export const API_BASE = `${BASE_HOST}/api/prescriptions`;
+export const MEDICINE_API = `${BASE_HOST}/api/medicine/search`;
+export const CSV_MED_API = `${BASE_HOST}/api/medicine/csv-search`;
+export const HEALTH_URL = `${BASE_HOST}/health`;
 
 export async function checkHealth() {
     try {
@@ -42,7 +39,6 @@ export async function getPrescription(id) {
 }
 
 export async function savePrescription(data) {
-    // Try PUT (update) first, then POST (create) if 404
     let res = await fetch(`${API_BASE}/${data.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -69,6 +65,15 @@ export async function deletePrescription(id) {
 }
 
 export async function searchMedicines(name) {
+    // Try CSV search first (faster, no DB needed)
+    try {
+        const res = await fetch(`${CSV_MED_API}?q=${encodeURIComponent(name)}&limit=20`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data?.data?.length) return data.data;
+        }
+    } catch { /* fall through */ }
+    // Fallback to DB search
     const res = await fetch(`${MEDICINE_API}?name=${encodeURIComponent(name)}`);
     if (!res.ok) return [];
     const data = await res.json();
