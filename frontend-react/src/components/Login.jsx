@@ -41,6 +41,13 @@ export default function Login({ onLogin }) {
 
     const switchTab = (t) => { setTab(t); setError(''); setSuccessMsg(''); };
 
+    // ── Demo Login ────────────────────────────────────────────────────────────
+    const handleDemoLogin = () => {
+        const demoUser = { id: 'demo', name: 'Dr. Demo', email: 'demo@drdeepak.in', role: 'doctor' };
+        sessionStorage.setItem('dd_user', JSON.stringify(demoUser));
+        onLogin(demoUser);
+    };
+
     // ── Login ─────────────────────────────────────────────────────────────────
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -162,6 +169,17 @@ export default function Login({ onLogin }) {
                         <p className="auth-switch-hint">
                             No account? <button type="button" className="auth-link" onClick={() => switchTab('signup')}>Create one →</button>
                         </p>
+
+                        {/* Demo Login */}
+                        <div className="demo-divider"><span>or</span></div>
+                        <button
+                            id="demo-login-btn"
+                            type="button"
+                            className="demo-login-btn"
+                            onClick={handleDemoLogin}
+                        >
+                            🎭 Try Demo Login
+                        </button>
                     </form>
                 )}
 
