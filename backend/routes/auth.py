@@ -2,7 +2,7 @@
 routes/auth.py
 --------------
 Signup and login endpoints using the same PostgreSQL connection
-as the rest of the app.  Passwords are bcrypt-hashed (via passlib).
+as the rest of the app.  Passwords are bcrypt-hashed.
 """
 
 from __future__ import annotations
@@ -12,24 +12,31 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 from database import get_connection
 
-# passlib is a common dep – falls back to hashlib if not installed
+# Use bcrypt directly (avoids passlib/bcrypt version incompatibility)
 try:
-    from passlib.context import CryptContext
-    _pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    import bcrypt as _bcrypt_lib
+
     def hash_password(pw: str) -> str:
-        return _pwd_ctx.hash(pw)
+        return _bcrypt_lib.hashpw(pw.encode('utf-8'), _bcrypt_lib.gensalt()).decode('utf-8')
+
     def verify_password(plain: str, hashed: str) -> bool:
-        return _pwd_ctx.verify(plain, hashed)
+        try:
+            return _bcrypt_lib.checkpw(plain.encode('utf-8'), hashed.encode('utf-8'))
+        except Exception:
+            return False
+
 except ImportError:
     import hashlib, hmac, os
+
     def hash_password(pw: str) -> str:          # type: ignore[misc]
         salt = os.urandom(16).hex()
         h = hashlib.sha256((salt + pw).encode()).hexdigest()
         return f"{salt}${h}"
+
     def verify_password(plain: str, hashed: str) -> bool:   # type: ignore[misc]
         try:
             salt, h = hashed.split("$", 1)
