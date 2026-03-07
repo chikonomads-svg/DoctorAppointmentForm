@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+
+# Environment files (keep .env.example, not real .env)
+backend/.env
+.env
+
+# Node / frontend
+frontend-react/node_modules/
+frontend-react/dist/
+frontend-react/.vite/
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+
+# CSV data (large files)
+*.csv
