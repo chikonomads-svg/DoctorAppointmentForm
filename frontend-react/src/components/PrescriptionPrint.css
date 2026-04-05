@@ -1,0 +1,233 @@
+/* ═══════════════════════════════════════════════════════
+   PrescriptionPrint.css
+   On-screen preview + @media print styles
+   Matches standard_prescription.pdf format
+   ═══════════════════════════════════════════════════════ */
+
+/* ── On-screen wrapper ── */
+.rx-print-page {
+    background: #fff;
+    color: #111;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 760px;
+    margin: 2rem auto;
+    padding: 32px 40px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    border-radius: 4px;
+}
+
+/* ── Title ── */
+.rx-print-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin: 0 0 6px;
+    text-transform: uppercase;
+}
+
+.rx-print-hr {
+    border: none;
+    border-top: 2px solid #111;
+    margin: 0 0 14px;
+}
+
+/* ── Sections ── */
+.rx-section {
+    margin-bottom: 16px;
+}
+
+.rx-section-heading {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0 0 6px;
+    padding: 0;
+    border-bottom: 1px solid #999;
+    padding-bottom: 2px;
+}
+
+/* ── Patient details / info table ── */
+.rx-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.rx-info-table td {
+    padding: 3px 6px;
+    vertical-align: top;
+}
+
+.rx-label {
+    font-weight: bold;
+    white-space: nowrap;
+    width: 90px;
+    color: #222;
+}
+
+.rx-value {
+    color: #111;
+    min-width: 120px;
+}
+
+/* ── Vitals table ── */
+.rx-vitals-table td {
+    padding: 3px 8px;
+}
+
+/* ── Bullet list (Chief Complaints, Advice) ── */
+.rx-bullet-list,
+.rx-plain-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13px;
+}
+
+.rx-bullet-list li {
+    list-style-type: disc;
+    margin-bottom: 2px;
+}
+
+.rx-plain-list li {
+    list-style-type: none;
+    margin-bottom: 2px;
+}
+
+/* ── Prescription table ── */
+.rx-med-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-top: 4px;
+}
+
+.rx-med-table th,
+.rx-med-table td {
+    border: 1px solid #888;
+    padding: 5px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.rx-med-table thead th {
+    background: #f0f0f0;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.rx-med-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* ── Follow-up ── */
+.rx-followup-value {
+    margin: 2px 0 0 4px;
+    font-size: 13px;
+}
+
+/* ── Empty state ── */
+.rx-empty {
+    color: #888;
+    font-style: italic;
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+/* ── Footer / Signature ── */
+.rx-footer {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    border-top: 1px solid #bbb;
+    padding-top: 14px;
+}
+
+.rx-sig-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 200px;
+}
+
+.rx-sig-label {
+    font-weight: bold;
+    font-size: 12px;
+    color: #333;
+}
+
+.rx-sig-line {
+    border-bottom: 1px solid #444;
+    min-width: 220px;
+    height: 24px;
+    display: inline-block;
+    font-size: 13px;
+    color: #111;
+    padding-left: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   @media print — hides UI chrome, shows only the slip
+   ═══════════════════════════════════════════════════════ */
+@media print {
+    /* Hide app chrome elements */
+    .app-header,
+    .bottom-bar,
+    .toast-container,
+    .dash-root,
+    .camera-modal,
+    .load-modal,
+    .form-section:not(#rx-print-page .form-section),
+    .app-main > section,
+    .app-main > div.bottom-bar {
+        display: none !important;
+    }
+
+    /* Let the print page flow naturally */
+    .app-main {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+    }
+
+    #rx-print-page {
+        max-width: 100%;
+        margin: 0;
+        padding: 18px 24px;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        font-size: 12pt;
+        page-break-inside: avoid;
+    }
+
+    .rx-print-title {
+        font-size: 15pt;
+    }
+
+    .rx-med-table th,
+    .rx-med-table td {
+        font-size: 11pt;
+    }
+
+    .rx-section-heading {
+        font-size: 12pt;
+    }
+
+    .rx-footer {
+        margin-top: 40px;
+    }
+
+    .rx-sig-line {
+        min-width: 200px;
+    }
+
+    @page {
+        margin: 15mm 12mm;
+        size: A4;
+    }
+}

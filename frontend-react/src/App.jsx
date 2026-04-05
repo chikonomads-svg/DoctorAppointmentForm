@@ -12,13 +12,16 @@ import SystemicExam from './components/SystemicExam';
 import Prescription from './components/Prescription';
 import Advice from './components/Advice';
 import LoadModal from './components/LoadModal';
+import PrescriptionPrint from './components/PrescriptionPrint';
 
 // ── Default empty prescription ────────────────────────────────────────────────
 const EMPTY = () => ({
     patient_date: new Date().toISOString().split('T')[0],
     patient_name: '',
+    patient_uhid: '',
+    follow_up: '',
     medications: [{}, {}, {}, {}, {}].map(() => ({
-        drug_name: '', dose: '', route: '', frequency: '', duration: '',
+        drug_name: '', dose: '', route: '', frequency: '', duration: '', instructions: '',
     })),
 });
 
@@ -193,6 +196,13 @@ export default function App() {
             <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
                 {saving ? 'Saving…' : '💾 Save'}
             </button>
+            <button
+                className="btn btn-secondary"
+                onClick={() => setView(v => v === 'print' ? 'form' : 'print')}
+                title="Toggle Print Preview"
+            >
+                {view === 'print' ? '✏️ Edit Form' : '📄 Print Preview'}
+            </button>
             <button className="btn btn-secondary" onClick={() => window.print()}>🖨️ Print</button>
             <button className="btn btn-danger" onClick={handleDelete}>🗑️ Delete</button>
         </>
@@ -237,16 +247,23 @@ export default function App() {
                 </div>
             </header>
 
-            {/* ── Main Form ────────────────────────────────────────── */}
+            {/* ── Main Form / Print Preview ─────────────────────── */}
             <main className="app-main">
-                <PatientInfo data={data} onChange={setData} />
-                <Comorbidities data={data} onChange={setData} />
-                <Vitals data={data} onChange={setData} />
-                <ClinicalAssessment data={data} onChange={setData} />
-                <PhysicalExam data={data} onChange={setData} />
-                <SystemicExam data={data} onChange={setData} />
-                <Prescription data={data} onChange={setData} backendAvailable={backendAvailable} />
-                <Advice data={data} onChange={setData} />
+                {view === 'print' ? (
+                    <PrescriptionPrint data={data} />
+                ) : (
+                    <>
+                        <PatientInfo data={data} onChange={setData} />
+                        <Comorbidities data={data} onChange={setData} />
+                        <Vitals data={data} onChange={setData} />
+                        <ClinicalAssessment data={data} onChange={setData} />
+                        <PhysicalExam data={data} onChange={setData} />
+                        <SystemicExam data={data} onChange={setData} />
+                        <Prescription data={data} onChange={setData} backendAvailable={backendAvailable} />
+                        <Advice data={data} onChange={setData} />
+                    </>
+
+                )}
 
                 {/* Bottom floating bar */}
                 <div className="bottom-bar">

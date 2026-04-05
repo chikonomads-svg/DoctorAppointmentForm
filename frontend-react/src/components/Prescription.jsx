@@ -99,6 +99,14 @@ function MedRow({ idx, med, onChange, onRemove, backendAvailable }) {
                 />
             </td>
             <td>
+                <input
+                    type="text"
+                    placeholder="e.g. After food"
+                    value={med.instructions || ''}
+                    onChange={e => onChange({ ...med, instructions: e.target.value })}
+                />
+            </td>
+            <td>
                 <button type="button" className="remove-row-btn" onClick={onRemove} title="Remove">×</button>
             </td>
         </tr>
@@ -136,6 +144,7 @@ export default function Prescription({ data, onChange, backendAvailable }) {
                             <th>Route</th>
                             <th>Frequency</th>
                             <th>Duration</th>
+                            <th>Instructions</th>
                             <th></th>
                         </tr>
                     </thead>

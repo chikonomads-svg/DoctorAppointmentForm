@@ -43,6 +43,24 @@ export default function PatientInfo({ data, onChange }) {
                     </select>
                 </div>
                 <div className="field-group">
+                    <label>UHID</label>
+                    <input
+                        type="text"
+                        placeholder="e.g. 123456"
+                        value={data.patient_uhid || ''}
+                        onChange={e => set('patient_uhid', e.target.value)}
+                    />
+                </div>
+                <div className="field-group">
+                    <label>Phone</label>
+                    <input
+                        type="text"
+                        placeholder="Patient phone number"
+                        value={data.patient_phone || ''}
+                        onChange={e => set('patient_phone', e.target.value)}
+                    />
+                </div>
+                <div className="field-group">
                     <label>Weight (kg)</label>
                     <input
                         type="number"
@@ -59,6 +77,15 @@ export default function PatientInfo({ data, onChange }) {
                         placeholder="Patient address"
                         value={data.patient_address || ''}
                         onChange={e => set('patient_address', e.target.value)}
+                    />
+                </div>
+                <div className="field-group">
+                    <label>Follow-up</label>
+                    <input
+                        type="text"
+                        placeholder="e.g. After 2 weeks"
+                        value={data.follow_up || ''}
+                        onChange={e => set('follow_up', e.target.value)}
                     />
                 </div>
             </div>
