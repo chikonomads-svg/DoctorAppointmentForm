@@ -9,6 +9,8 @@ services:
       - key: PYTHON_VERSION
         value: "3.11.0"
       - key: DATABASE_URL
-        sync: false        # set this manually in Render dashboard
+        sync: false        # set this manually in Render dashboard (PostgreSQL connection string)
       - key: OPENAI_API_KEY
         sync: false        # optional — for camera OCR feature
+      - key: JWT_SECRET
+        sync: false        # optional — for JWT token signing
