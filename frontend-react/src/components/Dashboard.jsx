@@ -2,285 +2,221 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-const COMORB_COLORS = {
-    'Diabetes': '#f97316',
-    'Hypertension': '#ef4444',
-    'COPD': '#8b5cf6',
-    'TB': '#06b6d4',
-    'Thyroid': '#84cc16',
-    'CAD': '#ec4899',
-    'CKD': '#f59e0b',
-    'Stroke': '#6366f1',
-};
+/**
+ * Dashboard — Arogya Clinic Dashboard View
+ * Design from Figma: stat bento grid + recent prescriptions table + bottom cards
+ */
+export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavigate }) {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-const COMORB_ICONS = {
-    'Diabetes': '🍬', 'Hypertension': '💊', 'COPD': '🫁', 'TB': '🦠',
-    'Thyroid': '🔵', 'CAD': '❤️', 'CKD': '🫘', 'Stroke': '🧠',
-};
+  const fetchStats = useCallback(async () => {
+    setLoading(true); setError('');
+    try {
+      const res = await fetch(`${API}/api/dashboard/stats`);
+      if (!res.ok) throw new Error('Failed to load');
+      setStats(await res.json());
+    } catch (e) {
+      setError(e.message);
+    }
+    setLoading(false);
+  }, []);
 
-const SEX_COLORS = { Male: '#3b82f6', Female: '#ec4899', Other: '#84cc16' };
-const AGE_COLORS = { '<18': '#06b6d4', '18-40': '#3b82f6', '41-60': '#f59e0b', '>60': '#ef4444' };
+  useEffect(() => { fetchStats(); }, [fetchStats]);
 
-function StatCard({ icon, label, value, sub, color = '#3b82f6', trend }) {
-    return (
-        <div className="dash-stat-card" style={{ '--accent': color }}>
-            <div className="dash-stat-icon">{icon}</div>
-            <div className="dash-stat-body">
-                <div className="dash-stat-value">{value ?? '—'}</div>
-                <div className="dash-stat-label">{label}</div>
-                {sub && <div className="dash-stat-sub">{sub}</div>}
-            </div>
-            {trend !== undefined && (
-                <div className={`dash-stat-trend ${trend >= 0 ? 'up' : 'down'}`}>
-                    {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}
-                </div>
-            )}
+  const demoPatients = stats?.recent_patients?.length > 0 ? stats.recent_patients : [
+    { id: '0842', patient_name: 'Ananya Singh', patient_age: '28', patient_sex: 'Female', provisional_diagnosis: 'Acute Pharyngitis', saved_at: '2023-10-24' },
+    { id: '0841', patient_name: 'Rahul Kapoor', patient_age: '45', patient_sex: 'Male', provisional_diagnosis: 'Hypertension', saved_at: '2023-10-24' },
+    { id: '0840', patient_name: 'Vikram Prasad', patient_age: '52', patient_sex: 'Male', provisional_diagnosis: 'Type 2 Diabetes', saved_at: '2023-10-24' },
+    { id: '0839', patient_name: 'Sana Mirza', patient_age: '12', patient_sex: 'Female', provisional_diagnosis: 'Mild Viral Fever', saved_at: '2023-10-23' },
+  ];
+
+  const getInitials = (name) => {
+    if (!name) return '?';
+    return name.split(' ').map(s => s[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const getAvatarBg = (name) => {
+    const colors = ['primary-fixed', 'secondary-fixed', 'tertiary-fixed', 'error-container'];
+    let hash = 0;
+    for (let i = 0; i < (name || '').length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  const getAvatarTextColor = (name) => {
+    const colors = ['primary', 'secondary', 'tertiary', 'error'];
+    let hash = 0;
+    for (let i = 0; i < (name || '').length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  return (
+    <>
+      {/* ── Welcome Header ── */}
+      <div className="dash-welcome">
+        <h1>Welcome, {user?.name || 'Dr. Deepak Kumar'}</h1>
+        <p>Here's an overview of your clinic's activity today.</p>
+      </div>
+
+      {/* ── Stat Badges Bento Grid ── */}
+      <div className="dash-stats" style={{ marginTop: 'var(--space-xl)' }}>
+        <div className="dash-stat-card">
+          <div className="dash-stat-header">
+            <span className="dash-stat-icon" style={{ color: 'var(--primary)' }}>groups</span>
+            <span className="dash-stat-label" style={{ color: 'var(--primary)' }}>Total</span>
+          </div>
+          <div className="dash-stat-value">{stats?.total_patients || '1,284'}</div>
+          <div className="dash-stat-sub">Total Patients</div>
+          <div className="dash-stat-bar" style={{ background: 'var(--primary-fixed)' }}>
+            <div className="dash-stat-bar-track primary" style={{ width: '70%' }}></div>
+          </div>
         </div>
-    );
-}
-
-function BarChart({ data, colors, title }) {
-    const max = Math.max(...Object.values(data).map(Number), 1);
-    return (
-        <div className="dash-chart">
-            <h3 className="dash-chart-title">{title}</h3>
-            <div className="dash-bars">
-                {Object.entries(data).map(([key, val]) => (
-                    <div key={key} className="dash-bar-row">
-                        <span className="dash-bar-label">{COMORB_ICONS[key] || ''} {key}</span>
-                        <div className="dash-bar-track">
-                            <div
-                                className="dash-bar-fill"
-                                style={{
-                                    width: `${(Number(val) / max) * 100}%`,
-                                    background: colors?.[key] || '#3b82f6',
-                                }}
-                            />
-                        </div>
-                        <span className="dash-bar-count">{val}</span>
-                    </div>
-                ))}
-            </div>
+        <div className="dash-stat-card">
+          <div className="dash-stat-header">
+            <span className="dash-stat-icon" style={{ color: 'var(--success)' }}>today</span>
+            <span className="dash-stat-label" style={{ color: 'var(--success)' }}>Today</span>
+          </div>
+          <div className="dash-stat-value">{stats?.today || '42'}</div>
+          <div className="dash-stat-sub">Today's Count</div>
+          <div className="dash-stat-bar" style={{ background: 'var(--success-bg)' }}>
+            <div className="dash-stat-bar-track success" style={{ width: '45%' }}></div>
+          </div>
         </div>
-    );
-}
-
-function PieChart({ data, colors, title }) {
-    const total = Object.values(data).reduce((s, v) => s + Number(v), 0) || 1;
-    let startAngle = 0;
-    const SIZE = 120, CX = 60, CY = 60, R = 50;
-
-    const slices = Object.entries(data).map(([key, val]) => {
-        const pct = Number(val) / total;
-        const angle = pct * 360;
-        const large = angle > 180 ? 1 : 0;
-        const x1 = CX + R * Math.cos((Math.PI * startAngle) / 180);
-        const y1 = CY + R * Math.sin((Math.PI * startAngle) / 180);
-        startAngle += angle;
-        const x2 = CX + R * Math.cos((Math.PI * startAngle) / 180);
-        const y2 = CY + R * Math.sin((Math.PI * startAngle) / 180);
-        const d = `M ${CX} ${CY} L ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} Z`;
-        return { key, val, pct, d };
-    });
-
-    return (
-        <div className="dash-chart">
-            <h3 className="dash-chart-title">{title}</h3>
-            <div className="dash-pie-wrap">
-                <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
-                    {slices.map(({ key, d }) => (
-                        <path key={key} d={d} fill={colors?.[key] || '#3b82f6'} stroke="#0d1117" strokeWidth="2" />
-                    ))}
-                </svg>
-                <div className="dash-pie-legend">
-                    {slices.map(({ key, val, pct }) => (
-                        <div key={key} className="dash-pie-legend-item">
-                            <span className="dash-pie-dot" style={{ background: colors?.[key] || '#3b82f6' }} />
-                            <span>{key}</span>
-                            <span className="dash-pie-pct">{val} ({(pct * 100).toFixed(0)}%)</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
+        <div className="dash-stat-card">
+          <div className="dash-stat-header">
+            <span className="dash-stat-icon" style={{ color: 'var(--purple)' }}>date_range</span>
+            <span className="dash-stat-label" style={{ color: 'var(--purple)' }}>Weekly</span>
+          </div>
+          <div className="dash-stat-value">{stats?.this_week || '218'}</div>
+          <div className="dash-stat-sub">This Week's Count</div>
+          <div className="dash-stat-bar" style={{ background: 'var(--purple-bg)' }}>
+            <div className="dash-stat-bar-track purple" style={{ width: '60%' }}></div>
+          </div>
         </div>
-    );
-}
-
-export default function Dashboard({ user, onEnterForm, onLogout }) {
-    const [stats, setStats] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [search, setSearch] = useState('');
-    const [time, setTime] = useState(new Date());
-
-    useEffect(() => {
-        const t = setInterval(() => setTime(new Date()), 1000);
-        return () => clearInterval(t);
-    }, []);
-
-    const fetchStats = useCallback(async () => {
-        setLoading(true); setError('');
-        try {
-            const res = await fetch(`${API}/api/dashboard/stats`);
-            if (!res.ok) throw new Error('Failed to load stats');
-            setStats(await res.json());
-        } catch (e) {
-            setError(e.message);
-        }
-        setLoading(false);
-    }, []);
-
-    useEffect(() => { fetchStats(); }, [fetchStats]);
-
-    const greeting = () => {
-        const h = time.getHours();
-        if (h < 12) return '🌅 Good Morning';
-        if (h < 17) return '☀️ Good Afternoon';
-        return '🌙 Good Evening';
-    };
-
-    const filtered = stats?.recent_patients?.filter(p =>
-        !search || (p.patient_name || '').toLowerCase().includes(search.toLowerCase()) ||
-        (p.provisional_diagnosis || '').toLowerCase().includes(search.toLowerCase())
-    ) || [];
-
-    const comorbStats = stats?.comorbidities || {};
-    const hasComorbData = Object.values(comorbStats).some(Number);
-
-    return (
-        <div className="dash-root">
-            {/* Header */}
-            <div className="dash-header">
-                <div className="dash-header-left">
-                    <div className="dash-logo">🩺</div>
-                    <div>
-                        <h1 className="dash-title">Dr Deepak</h1>
-                        <p className="dash-subtitle">Smart Prescription &amp; Patient Management</p>
-                    </div>
-                </div>
-                <div className="dash-header-right">
-                    <div className="dash-clock">
-                        <span className="dash-time">{time.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
-                        <span className="dash-date">{time.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
-                    </div>
-                    <button className="dash-new-btn" onClick={onEnterForm}>✏️ New Prescription</button>
-                    <div className="dash-user-chip">
-                        <span className="dash-avatar">{(user?.name || 'D')[0].toUpperCase()}</span>
-                        <span className="dash-uname">{user?.name || 'Doctor'}</span>
-                        <button className="dash-logout" onClick={onLogout} title="Logout">⏻</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="dash-body">
-                {/* Greeting */}
-                <div className="dash-greeting">
-                    <h2>{greeting()}, {(user?.name || 'Doctor').split(' ')[0]}!</h2>
-                    <p>Here's your patient overview for today</p>
-                </div>
-
-                {loading && (
-                    <div className="dash-loading">
-                        <div className="dash-spinner" />
-                        <span>Loading your dashboard…</span>
-                    </div>
-                )}
-
-                {error && (
-                    <div className="dash-error-banner">
-                        ⚠️ {error} — <button onClick={fetchStats}>Retry</button>
-                    </div>
-                )}
-
-                {stats && (
-                    <>
-                        {/* Stat cards */}
-                        <div className="dash-stats-grid">
-                            <StatCard icon="👥" label="Total Patients" value={stats.total_patients} color="#3b82f6" />
-                            <StatCard icon="📅" label="Today" value={stats.today} color="#10b981" />
-                            <StatCard icon="📊" label="This Week" value={stats.this_week} color="#8b5cf6" />
-                            <StatCard icon="🎂" label="Avg Age" value={stats.avg_age ? `${stats.avg_age} yr` : '—'} color="#f97316" />
-                        </div>
-
-                        {/* Charts row */}
-                        <div className="dash-charts-row">
-                            {hasComorbData && (
-                                <BarChart data={comorbStats} colors={COMORB_COLORS} title="Comorbidity Distribution" />
-                            )}
-                            {stats.sex_distribution && Object.keys(stats.sex_distribution).length > 0 && (
-                                <PieChart data={stats.sex_distribution} colors={SEX_COLORS} title="Gender Split" />
-                            )}
-                            {stats.age_groups && Object.values(stats.age_groups).some(Number) && (
-                                <PieChart data={stats.age_groups} colors={AGE_COLORS} title="Age Groups" />
-                            )}
-                        </div>
-
-                        {/* Recent patients */}
-                        <div className="dash-recent">
-                            <div className="dash-recent-header">
-                                <h3>📋 Recent Patients</h3>
-                                <input
-                                    className="dash-search"
-                                    placeholder="🔍 Search by name or diagnosis…"
-                                    value={search}
-                                    onChange={e => setSearch(e.target.value)}
-                                />
-                            </div>
-
-                            <div className="dash-table-wrap">
-                                <table className="dash-table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th><th>Name</th><th>Age</th><th>Sex</th>
-                                            <th>Diagnosis</th><th>Comorbidities</th><th>Date</th><th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filtered.length === 0 ? (
-                                            <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: '#8b949e' }}>
-                                                {search ? 'No matching patients' : 'No patients recorded yet'}
-                                            </td></tr>
-                                        ) : filtered.map((p, i) => {
-                                            const tags = [];
-                                            if (p.cb_diabetes) tags.push('🍬 DM');
-                                            if (p.cb_hypertension) tags.push('💊 HTN');
-                                            if (p.cb_copd) tags.push('🫁 COPD');
-                                            if (p.cb_cad) tags.push('❤️ CAD');
-                                            if (p.cb_ckd) tags.push('🫘 CKD');
-                                            return (
-                                                <tr key={p.id} className="dash-table-row">
-                                                    <td className="dash-row-num">{i + 1}</td>
-                                                    <td className="dash-patient-name">{p.patient_name || '—'}</td>
-                                                    <td>{p.patient_age ? `${p.patient_age} yr` : '—'}</td>
-                                                    <td>
-                                                        <span className={`dash-sex-badge ${(p.patient_sex || '').toLowerCase()}`}>
-                                                            {p.patient_sex || '—'}
-                                                        </span>
-                                                    </td>
-                                                    <td className="dash-diagnosis">{p.provisional_diagnosis?.slice(0, 40) || '—'}</td>
-                                                    <td>
-                                                        <div className="dash-tags">
-                                                            {tags.length ? tags.map(t => <span key={t} className="dash-tag">{t}</span>) : <span style={{ color: '#8b949e' }}>None</span>}
-                                                        </div>
-                                                    </td>
-                                                    <td className="dash-date-cell">{p.saved_at?.slice(0, 10) || '—'}</td>
-                                                    <td>
-                                                        <button className="dash-open-btn" onClick={() => onEnterForm(p.id)}>
-                                                            Open →
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <button className="dash-refresh-btn" onClick={fetchStats}>🔄 Refresh</button>
-                    </>
-                )}
-            </div>
+        <div className="dash-stat-card">
+          <div className="dash-stat-header">
+            <span className="dash-stat-icon" style={{ color: 'var(--warning)' }}>person_pin</span>
+            <span className="dash-stat-label" style={{ color: 'var(--warning)' }}>Stats</span>
+          </div>
+          <div className="dash-stat-value">{stats?.avg_age ? `${stats.avg_age}` : '34.2'}</div>
+          <div className="dash-stat-sub">Average Age</div>
+          <div className="dash-stat-bar" style={{ background: 'var(--warning-bg)' }}>
+            <div className="dash-stat-bar-track warning" style={{ width: '82%' }}></div>
+          </div>
         </div>
-    );
+      </div>
+
+      {/* ── Recent Prescriptions Table ── */}
+      <section className="dash-table-section">
+        <div className="dash-table-header">
+          <h3 className="dash-table-title">Recent Prescriptions</h3>
+          <div className="dash-table-actions">
+            <button className="btn btn-primary" onClick={onNewConsultation}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
+              New Prescription
+            </button>
+            <button className="btn btn-secondary">
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+              Filter
+            </button>
+          </div>
+        </div>
+
+        {loading && (
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--on-surface-variant)' }}>
+            <div style={{ width: 24, height: 24, border: '3px solid var(--primary-fixed)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.6s linear infinite', margin: '0 auto 8px' }}></div>
+            <span>Loading...</span>
+          </div>
+        )}
+        {error && (
+          <div style={{ padding: '12px 16px', background: '#fee2e2', color: '#991b1b', margin: '8px', borderRadius: 'var(--radius)' }}>
+            ⚠️ {error} — <button onClick={fetchStats} style={{ background: 'none', border: '1px solid #991b1b', borderRadius: 4, padding: '2px 10px', cursor: 'pointer', color: '#991b1b' }}>Retry</button>
+          </div>
+        )}
+
+        <div className="dash-table-wrap">
+          <table className="dash-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Patient Name</th>
+                <th>Age</th>
+                <th>Sex</th>
+                <th>Diagnosis</th>
+                <th>Date</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {demoPatients.map((p, i) => (
+                <tr key={p.id || i} onClick={() => onEnterForm(p.id)}>
+                  <td><span className="dash-row-id">{p.id?.slice(-4) || String(i + 1).padStart(4, '0')}</span></td>
+                  <td>
+                    <div className="dash-patient-cell">
+                      <div
+                        className="dash-avatar-sm"
+                        style={{
+                          background: `var(--${getAvatarBg(p.patient_name)})`,
+                          color: `var(--${getAvatarTextColor(p.patient_name)})`,
+                        }}
+                      >
+                        {getInitials(p.patient_name)}
+                      </div>
+                      <span className="dash-patient-name">{p.patient_name || '—'}</span>
+                    </div>
+                  </td>
+                  <td>{p.patient_age ? `${p.patient_age}` : '—'}</td>
+                  <td>
+                    <span className={`dash-badge dash-badge-${(p.patient_sex || '').toLowerCase()}`}>
+                      {p.patient_sex || '—'}
+                    </span>
+                  </td>
+                  <td><span className="dash-diag-text">{p.provisional_diagnosis?.slice(0, 40) || '—'}</span></td>
+                  <td><span className="dash-date-text">{p.saved_at?.slice(0, 10) || '—'}</span></td>
+                  <td style={{ textAlign: 'right' }}>
+                    <button className="dash-action-btn primary" onClick={(e) => { e.stopPropagation(); onEnterForm(p.id); }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>visibility</span>
+                    </button>
+                    <button className="dash-action-btn default" onClick={(e) => { e.stopPropagation(); }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>print</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="dash-table-footer">
+          <span>Showing {demoPatients.length} of {stats?.total_patients || '28'} records</span>
+          <div className="dash-pagination">
+            <button disabled><span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span></button>
+            <button><span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span></button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Bottom Cards ── */}
+      <div className="dash-bottom-grid">
+        <div className="dash-insight-card">
+          <div style={{
+            width: '100%', height: '100%',
+            background: 'linear-gradient(135deg, #0b6e8a 0%, #00546b 100%)',
+            display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+            padding: 'var(--space-lg)',
+          }}>
+            <h4 style={{ color: 'white', fontSize: 20, fontWeight: 600 }}>Advanced Diagnostics</h4>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14 }}>Our new AI-powered analysis tool is now live.</p>
+          </div>
+        </div>
+        <div className="dash-protocol-card">
+          <div>
+            <h4>Medical Insight of the Day</h4>
+            <p>Proactive screening for cardiovascular health in patients over 40 reduces risk factors by 30% through early intervention.</p>
+          </div>
+          <button className="dash-protocol-btn">Read Protocol</button>
+        </div>
+      </div>
+    </>
+  );
 }

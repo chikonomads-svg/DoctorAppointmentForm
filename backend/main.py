@@ -19,7 +19,6 @@ from fastapi.responses import JSONResponse
 from database import init_db
 from routes.prescriptions import router as prescription_router
 from routes.medicine import router as medicine_router
-from routes.ocr import router as ocr_router
 from routes.auth import router as auth_router
 from routes.csv_medicine import router as csv_medicine_router
 from routes.dashboard import router as dashboard_router
@@ -54,7 +53,6 @@ def startup():
 
 app.include_router(prescription_router)
 app.include_router(medicine_router)
-app.include_router(ocr_router)
 app.include_router(auth_router)
 app.include_router(csv_medicine_router)
 app.include_router(dashboard_router)

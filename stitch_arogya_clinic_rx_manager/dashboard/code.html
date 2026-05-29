@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arogya Clinic Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Noto+Sans+Devanagari:wght@400;500;700&amp;family=Source+Serif+4:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #bfc8cd; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6f787d; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#bbeaff",
+                        "on-tertiary-fixed": "#111d21",
+                        "on-primary-fixed": "#001f29",
+                        "on-secondary-container": "#24667f",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#dde4e7",
+                        "on-surface": "#161d1f",
+                        "tertiary": "#435053",
+                        "on-secondary-fixed": "#001f2a",
+                        "outline": "#6f787d",
+                        "surface-dim": "#d4dbde",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004d62",
+                        "surface": "#f3fafd",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#d7e5e9",
+                        "surface-container-low": "#eef5f8",
+                        "on-surface-variant": "#3f484d",
+                        "secondary-fixed": "#bde9ff",
+                        "secondary-container": "#a6e3ff",
+                        "tertiary-container": "#5b686b",
+                        "background": "#f3fafd",
+                        "tertiary-fixed-dim": "#bbc9cd",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#0b6e8a",
+                        "on-tertiary-container": "#d8e6ea",
+                        "surface-tint": "#006782",
+                        "on-tertiary-fixed-variant": "#3c494c",
+                        "inverse-on-surface": "#ebf2f5",
+                        "primary": "#00546b",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#bfc8cd",
+                        "on-background": "#161d1f",
+                        "inverse-surface": "#2a3234",
+                        "primary-fixed-dim": "#84d1f0",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#92cfeb",
+                        "on-secondary-fixed-variant": "#004d64",
+                        "surface-variant": "#dde4e7",
+                        "surface-container-high": "#e2e9ec",
+                        "secondary": "#23657e",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#bdeaff",
+                        "surface-container": "#e8eff2",
+                        "surface-bright": "#f3fafd",
+                        "inverse-primary": "#84d1f0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "margin-desktop": "40px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "xl": "32px",
+                        "sm": "12px",
+                        "margin-mobile": "16px",
+                        "lg": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "hindi-accent": ["Noto Sans Devanagari"],
+                        "headline-lg": ["Inter"],
+                        "print-prescription": ["Source Serif 4"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "hindi-accent": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "print-prescription": ["12pt", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-xs">
+<span class="font-hindi-accent text-hindi-accent text-primary">आरोग्य क्लिनिक</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary ml-base">Arogya Clinic</h1>
+</div>
+<div class="flex items-center gap-base">
+<button class="material-symbols-outlined p-base text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">account_circle</button>
+<button class="material-symbols-outlined p-base text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">grid_view</button>
+<button class="material-symbols-outlined p-base text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">logout</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 p-md bg-surface-container-low border-r border-outline-variant z-40 pt-20">
+<div class="flex items-center gap-base mb-xl px-base">
+<img alt="Dr. Deepak Kumar" class="w-12 h-12 rounded-full border border-outline-variant bg-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM07HQ9Usudb2XPCA7JyyOyye2ZvXpSNruZQTXMc19B0nPzsPsPq6vM3ZHdTXOv8obJaLlwL1HQN-7hG8HTJQSMhswZUioUUrRr62uhrpPHI63PoFZsc-rgyiDM2VaM0TZrkVIxrPVnnsyPILTvrSju1voRh63gT1UzXQYuW7qEFZmy3pAeEB8-gg_H6m0s8lHbZtvEhdmep3uVl1bjjuvOztbEzyykiYtXfPELOw-HElLkoym8Wo7CkMRsRA8EJKTTKJQbFys3IM"/>
+<div>
+<p class="font-label-sm text-on-surface font-bold">Dr. Deepak Kumar</p>
+<p class="text-[10px] text-on-surface-variant">MBBS, MD | Reg: 12345</p>
+</div>
+</div>
+<nav class="flex-1 space-y-xs">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-base px-base py-md bg-primary-container text-on-primary-container font-bold rounded-lg transition-all scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-base px-base py-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="font-label-sm">Patients</span>
+</a>
+<a class="flex items-center gap-base px-base py-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-sm">Prescriptions</span>
+</a>
+<a class="flex items-center gap-base px-base py-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm">Settings</span>
+</a>
+</nav>
+<button class="mt-xl w-full bg-primary-container text-on-primary-container py-md px-lg rounded-xl font-bold flex items-center justify-center gap-base hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-sm">New Consultation</span>
+</button>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 md:pb-8 md:pl-72 px-margin-mobile md:px-margin-desktop">
+<header class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-primary">Welcome, Dr. Deepak Kumar</h2>
+<p class="text-on-surface-variant font-body-md">Here's an overview of your clinic's activity today.</p>
+</header>
+<!-- Stat Badges Bento Grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl">
+<div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col gap-xs shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-[10px] uppercase tracking-wider font-bold text-primary">Total</span>
+</div>
+<p class="text-[28px] font-black text-on-surface">1,284</p>
+<p class="text-label-sm text-on-surface-variant">Total Patients</p>
+<div class="h-1.5 w-full bg-primary-fixed rounded-full overflow-hidden mt-xs">
+<div class="bg-primary h-full w-[70%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col gap-xs shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-[#2E7D32]" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="text-[10px] uppercase tracking-wider font-bold text-[#2E7D32]">Today</span>
+</div>
+<p class="text-[28px] font-black text-on-surface">42</p>
+<p class="text-label-sm text-on-surface-variant">Today's Count</p>
+<div class="h-1.5 w-full bg-[#E8F5E9] rounded-full overflow-hidden mt-xs">
+<div class="bg-[#2E7D32] h-full w-[45%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col gap-xs shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-[#6A1B9A]" style="font-variation-settings: 'FILL' 1;">date_range</span>
+<span class="text-[10px] uppercase tracking-wider font-bold text-[#6A1B9A]">Weekly</span>
+</div>
+<p class="text-[28px] font-black text-on-surface">218</p>
+<p class="text-label-sm text-on-surface-variant">This Week's Count</p>
+<div class="h-1.5 w-full bg-[#F3E5F5] rounded-full overflow-hidden mt-xs">
+<div class="bg-[#6A1B9A] h-full w-[60%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex flex-col gap-xs shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-[#FF8F00]" style="font-variation-settings: 'FILL' 1;">person_pin</span>
+<span class="text-[10px] uppercase tracking-wider font-bold text-[#FF8F00]">Stats</span>
+</div>
+<p class="text-[28px] font-black text-on-surface">34.2</p>
+<p class="text-label-sm text-on-surface-variant">Average Age</p>
+<div class="h-1.5 w-full bg-[#FFF8E1] rounded-full overflow-hidden mt-xs">
+<div class="bg-[#FF8F00] h-full w-[82%]"></div>
+</div>
+</div>
+</div>
+<!-- Recent Prescriptions Table -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="p-lg flex flex-col md:flex-row md:items-center justify-between gap-base border-b border-outline-variant">
+<h3 class="font-headline-md text-on-surface">Recent Prescriptions</h3>
+<div class="flex gap-base">
+<button class="bg-primary text-on-primary px-lg py-base rounded-lg flex items-center gap-xs font-label-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        New Prescription
+                    </button>
+<button class="border border-outline px-lg py-base rounded-lg flex items-center gap-xs font-label-sm text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                        Filter
+                    </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm">
+<th class="py-md px-lg">#</th>
+<th class="py-md px-lg">Patient Name</th>
+<th class="py-md px-lg">Age</th>
+<th class="py-md px-lg">Sex</th>
+<th class="py-md px-lg">Diagnosis</th>
+<th class="py-md px-lg">Date</th>
+<th class="py-md px-lg text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-md px-lg font-bold text-on-surface-variant">0842</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-base">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-[10px]">AS</div>
+<span class="font-bold text-on-surface">Ananya Singh</span>
+</div>
+</td>
+<td class="py-md px-lg">28</td>
+<td class="py-md px-lg">
+<span class="bg-[#FCE4EC] text-[#D81B60] px-base py-[2px] rounded-full text-[10px] font-bold">Female</span>
+</td>
+<td class="py-md px-lg text-on-surface-variant italic">Acute Pharyngitis</td>
+<td class="py-md px-lg text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-md px-lg text-right">
+<button class="material-symbols-outlined text-primary hover:bg-primary-fixed p-xs rounded-lg">visibility</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-xs rounded-lg">print</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-md px-lg font-bold text-on-surface-variant">0841</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-base">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary font-bold text-[10px]">RK</div>
+<span class="font-bold text-on-surface">Rahul Kapoor</span>
+</div>
+</td>
+<td class="py-md px-lg">45</td>
+<td class="py-md px-lg">
+<span class="bg-[#E3F2FD] text-[#1976D2] px-base py-[2px] rounded-full text-[10px] font-bold">Male</span>
+</td>
+<td class="py-md px-lg text-on-surface-variant italic">Hypertension</td>
+<td class="py-md px-lg text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-md px-lg text-right">
+<button class="material-symbols-outlined text-primary hover:bg-primary-fixed p-xs rounded-lg">visibility</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-xs rounded-lg">print</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-md px-lg font-bold text-on-surface-variant">0840</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-base">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-[10px]">VP</div>
+<span class="font-bold text-on-surface">Vikram Prasad</span>
+</div>
+</td>
+<td class="py-md px-lg">52</td>
+<td class="py-md px-lg">
+<span class="bg-[#E3F2FD] text-[#1976D2] px-base py-[2px] rounded-full text-[10px] font-bold">Male</span>
+</td>
+<td class="py-md px-lg text-on-surface-variant italic">Type 2 Diabetes</td>
+<td class="py-md px-lg text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-md px-lg text-right">
+<button class="material-symbols-outlined text-primary hover:bg-primary-fixed p-xs rounded-lg">visibility</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-xs rounded-lg">print</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-md px-lg font-bold text-on-surface-variant">0839</td>
+<td class="py-md px-lg">
+<div class="flex items-center gap-base">
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center text-error font-bold text-[10px]">SM</div>
+<span class="font-bold text-on-surface">Sana Mirza</span>
+</div>
+</td>
+<td class="py-md px-lg">12</td>
+<td class="py-md px-lg">
+<span class="bg-[#FCE4EC] text-[#D81B60] px-base py-[2px] rounded-full text-[10px] font-bold">Female</span>
+</td>
+<td class="py-md px-lg text-on-surface-variant italic">Mild Viral Fever</td>
+<td class="py-md px-lg text-on-surface-variant">Oct 23, 2023</td>
+<td class="py-md px-lg text-right">
+<button class="material-symbols-outlined text-primary hover:bg-primary-fixed p-xs rounded-lg">visibility</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-xs rounded-lg">print</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container flex items-center justify-between text-on-surface-variant font-label-sm">
+<span>Showing 4 of 28 records</span>
+<div class="flex gap-xs">
+<button class="p-xs hover:bg-surface-variant rounded-lg disabled:opacity-30" disabled=""><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-xs hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</section>
+<!-- Aesthetic Bottom Card Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter mt-xl">
+<div class="relative overflow-hidden group rounded-xl aspect-[16/9] lg:aspect-auto h-48 border border-outline-variant">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A serene and highly modern medical consultation room with large floor-to-ceiling windows overlooking a soft morning landscape. The interior features minimalist white furniture, a subtle teal color palette, and high-key clinical lighting that evokes a sense of professional calm and technological sophistication. The overall aesthetic is clean, spacious, and extremely high-end." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYYg_fhsGPJIYIx7BESywgOIVdHV_NbDCOqouomWiVG26mqU_yeazgJz2VLtMwaoiW27BUhN5xpBKEARFl-33aFpDGF3ng1E5heVQNAVCmNaLzLwSwuh0DhfXBwVuAqLTnSEBfYieat8NsKDMIFmVC5MNYD_U0bapuzvFxeBOzwY7JMnNT822Mna7J07v2GoPsLWXI8RZ0WhHHmuGr15Va_vZxHggy0EqyAFzczIKUGqgVcZusLbjpZg1f0pcWWCUGZ5CC2BUOUVQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-lg">
+<h4 class="text-white font-headline-md">Advanced Diagnostics</h4>
+<p class="text-white/80 text-body-md">Our new AI-powered analysis tool is now live.</p>
+</div>
+</div>
+<div class="bg-primary-container p-lg rounded-xl flex flex-col justify-between">
+<div>
+<h4 class="text-on-primary-container font-headline-md mb-xs">Medical Insight of the Day</h4>
+<p class="text-on-primary-container/80 text-body-md">Proactive screening for cardiovascular health in patients over 40 reduces risk factors by 30% through early intervention.</p>
+</div>
+<button class="self-start text-on-primary-container bg-white/20 px-lg py-base rounded-lg font-label-sm backdrop-blur-md border border-white/20 hover:bg-white/30 transition-colors">Read Protocol</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center py-xs px-sm md:hidden bg-surface-container-highest shadow-md rounded-t-xl border-t border-outline-variant">
+<!-- Home active -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full p-2 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-label-sm">New</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="text-label-sm">Load</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">save</span>
+<span class="text-label-sm">Save</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">print</span>
+<span class="text-label-sm">Print</span>
+</a>
+</nav>
+<!-- Floating Action Button Contextual -->
+<button class="fixed bottom-24 right-6 md:bottom-8 md:right-8 bg-primary text-on-primary w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 md:hidden">
+<span class="material-symbols-outlined">medical_services</span>
+</button>
+<script>
+        // Micro-interactions for table rows and buttons
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                row.classList.add('bg-primary-fixed');
+                setTimeout(() => row.classList.remove('bg-primary-fixed'), 200);
+            });
+        });
+
+        // Hover effect for side nav items
+        const navItems = document.querySelectorAll('aside nav a');
+        navItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                if(!item.classList.contains('bg-primary-container')) {
+                    item.style.transform = 'translateX(4px)';
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body></html>
