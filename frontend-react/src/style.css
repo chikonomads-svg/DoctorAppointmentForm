@@ -115,6 +115,24 @@
   transition: background var(--transition-fast);
 }
 .app-bar-btn:hover { background: var(--surface-container-low); }
+.app-bar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 var(--space-md);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  width: auto;
+  height: 34px;
+  font-size: 13px;
+}
+.app-bar-cta:hover { background: var(--primary); color: white; }
+@media (max-width: 768px) {
+  .app-bar-cta-label { display: none; }
+  .app-bar-cta { padding: 0; width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--primary); }
+}
 
 /* ════════════════════════════════════════════════
    SIDE NAV (Desktop)
@@ -132,6 +150,7 @@
   border-right: 1px solid var(--outline-variant);
   z-index: 40;
   padding-top: 80px;
+  overflow-y: auto;
 }
 @media (min-width: 768px) { .side-nav { display: flex; } }
 .side-nav-profile {
@@ -170,7 +189,6 @@
   letter-spacing: 0.5px;
 }
 .side-nav-links {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);

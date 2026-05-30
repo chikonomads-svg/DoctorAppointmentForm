@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { checkHealth, savePrescription, getPrescription, deletePrescription } from './api';
+import React, { useState, useEffect, useRef } from 'react';
+import { checkHealth, savePrescription, getPrescription, deletePrescription, searchMedicines } from './api';
 import AppShell from './components/AppShell';
 import Dashboard from './components/Dashboard';
 import PatientDirectory from './components/PatientDirectory';
@@ -78,7 +78,7 @@ const EMPTY = () => ({
   ex_pallor: false, ex_icterus: false, ex_cyanosis: false, ex_clubbing: false, ex_edema: false,
   exam_rs: '', exam_cvs: '', exam_cns: '', exam_pa: '',
   advice: '',
-  medications: [{},{},{},{},{}].map(() => ({ drug_name: '', dose: '', route: '', frequency: '', duration: '', instructions: '' })),
+  medications: [{ drug_name: '', dose: '', route: '', frequency: '', duration: '', instructions: '' }],
   saved_at: new Date().toISOString(), id: '',
 });
 
@@ -96,6 +96,112 @@ function FormField({ label, children }) { return (<div className="form-group">{l
 
 function Switch({ checked, onChange, label }) {
   return (<div className="rx-switch-row"><span style={{fontSize:14}}>{label}</span><div className={'rx-switch ' + (checked ? 'active' : '')} onClick={() => onChange(!checked)}><div className="rx-switch-knob"/></div></div>);
+}
+
+// ═══ Medicine Autocomplete Input ═══
+function DrugSearchInput({ value, onChange, placeholder }) {
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const ignoreBlurRef = useRef(false);
+  const justSelectedRef = useRef(false);
+  const initialValueRef = useRef(value);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    // Don't search if this is the initial value (e.g. loaded from saved prescription)
+    if (value === initialValueRef.current) { initialValueRef.current = ''; return; }
+    if (!value || value.length < 2) { setSuggestions([]); setShowDropdown(false); return; }
+    if (justSelectedRef.current) { justSelectedRef.current = false; return; }
+    setLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const results = await searchMedicines(value);
+        setSuggestions(results || []);
+        setShowDropdown(results?.length > 0);
+      } catch { setSuggestions([]); }
+      setLoading(false);
+    }, 300);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  const selectDrug = (name) => {
+    justSelectedRef.current = true;
+    ignoreBlurRef.current = true;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setSuggestions([]);
+    setShowDropdown(false);
+    onChange(name);
+  };
+
+  return (
+    <div ref={wrapperRef} style={{ position: 'relative', width: '100%' }}>
+      <div style={{ position: 'relative' }}>
+        <input
+          type="text"
+          placeholder={placeholder || 'Type medicine name...'}
+          value={value}
+          onChange={e => { onChange(e.target.value); }}
+          onFocus={() => { if (suggestions.length > 0 && !ignoreBlurRef.current) setShowDropdown(true); }}
+          onBlur={() => {
+            if (!ignoreBlurRef.current) setShowDropdown(false);
+            ignoreBlurRef.current = false;
+          }}
+          style={{ width: '100%', border: 'none', background: 'transparent', padding: '6px 0', fontSize: 14, outline: 'none' }}
+        />
+        {loading && <span style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', fontSize: 10, color: 'var(--outline)' }}>⌛</span>}
+      </div>
+      {showDropdown && (
+        <div style={{
+          position: 'fixed', zIndex: 99999,
+          background: 'white', border: '1px solid #d1d5db',
+          borderRadius: 8, boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+          maxHeight: 260, overflowY: 'auto', minWidth: 280,
+        }}
+          ref={el => {
+            if (el && wrapperRef.current) {
+              const rect = wrapperRef.current.getBoundingClientRect();
+              el.style.left = rect.left + 'px';
+              el.style.top = (rect.bottom + 2) + 'px';
+              el.style.width = Math.max(rect.width, 320) + 'px';
+            }
+          }}
+          onMouseDown={() => { ignoreBlurRef.current = true; }}
+        >
+          <div style={{ padding: '6px 12px', fontSize: 11, color: '#6b7280', borderBottom: '1px solid #f3f4f6', background: '#f9fafb' }}>
+            PMBJP Generic Medicine Results
+          </div>
+          {suggestions.map((drug, i) => (
+            <div key={drug.id || i}
+              onMouseDown={() => selectDrug(drug.name)}
+              style={{
+                padding: '10px 14px', cursor: 'pointer', borderBottom: '1px solid #f3f4f6',
+                fontSize: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = '#eff6ff'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <div>
+                <div style={{ fontWeight: 600, color: '#111827' }}>{drug.name}</div>
+                <div style={{ fontSize: 11, color: '#6b7280', marginTop: 2 }}>
+                  {drug.form || ''}{drug.group_name ? ` • ${drug.group_name}` : ''}
+                </div>
+              </div>
+              {drug.mrp && (
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#059669', whiteSpace: 'nowrap', marginLeft: 12 }}>
+                  ₹{drug.mrp}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function ComorbidityDetail({ data, onChange, comorbidity }) {
@@ -237,7 +343,7 @@ export default function App() {
           <div className="rx-med-section">
             <div className="rx-med-header"><h2>Rx</h2><button className="btn btn-ghost" onClick={addMed} style={{color:'var(--primary)',fontWeight:700}}><span className="material-symbols-outlined">add_circle</span> Add Medication</button></div>
             <div className="rx-med-table-wrap"><table className="rx-med-table"><thead><tr><th>Drug Name</th><th>Dose</th><th style={{width:100}}>Route</th><th style={{width:140}}>Frequency</th><th style={{width:80}}>Dur.</th><th>Instructions</th><th style={{width:40}}></th></tr></thead>
-              <tbody>{data.medications.map((med,i)=>(<tr key={i}><td><input type="text" placeholder="e.g. Paracetamol 500mg" value={med.drug_name} onChange={e=>updateMed(i,{drug_name:e.target.value})}/></td><td><input type="text" placeholder="1 Tab" value={med.dose} onChange={e=>updateMed(i,{dose:e.target.value})}/></td><td><select value={med.route} onChange={e=>updateMed(i,{route:e.target.value})}><option value="">Route</option>{ROUTE_OPTIONS.map(r=><option key={r} value={r}>{r}</option>)}</select></td><td><select value={med.frequency} onChange={e=>updateMed(i,{frequency:e.target.value})}><option value="">Freq</option>{FREQ_OPTIONS.map(f=><option key={f} value={f}>{f}</option>)}</select></td><td><input type="text" placeholder="5 Days" value={med.duration} onChange={e=>updateMed(i,{duration:e.target.value})}/></td><td><input type="text" placeholder="After food" value={med.instructions} onChange={e=>updateMed(i,{instructions:e.target.value})}/></td><td><button className="dash-action-btn default" onClick={()=>removeMed(i)} title="Remove"><span className="material-symbols-outlined" style={{fontSize:18}}>close</span></button></td></tr>))}
+              <tbody>{data.medications.map((med,i)=>(<tr key={i}><td><DrugSearchInput value={med.drug_name} onChange={(v)=>updateMed(i,{drug_name:v})} placeholder="e.g. Paracetamol 500mg"/></td><td><input type="text" placeholder="1 Tab" value={med.dose} onChange={e=>updateMed(i,{dose:e.target.value})}/></td><td><select value={med.route} onChange={e=>updateMed(i,{route:e.target.value})}><option value="">Route</option>{ROUTE_OPTIONS.map(r=><option key={r} value={r}>{r}</option>)}</select></td><td><select value={med.frequency} onChange={e=>updateMed(i,{frequency:e.target.value})}><option value="">Freq</option>{FREQ_OPTIONS.map(f=><option key={f} value={f}>{f}</option>)}</select></td><td><input type="text" placeholder="5 Days" value={med.duration} onChange={e=>updateMed(i,{duration:e.target.value})}/></td><td><input type="text" placeholder="After food" value={med.instructions} onChange={e=>updateMed(i,{instructions:e.target.value})}/></td><td><button className="dash-action-btn default" onClick={()=>removeMed(i)} title="Remove"><span className="material-symbols-outlined" style={{fontSize:18}}>close</span></button></td></tr>))}
               <tr className="rx-med-empty"><td colSpan={7}></td></tr></tbody></table></div></div>
           <div className="rx-advice-section">
             <div><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'var(--space-md)'}}><h3 style={{fontSize:12,fontWeight:600,color:'var(--primary)',display:'flex',alignItems:'center',gap:'var(--space-base)',textTransform:'uppercase',letterSpacing:'0.5px'}}><span className="material-symbols-outlined" style={{fontSize:18}}>lightbulb</span> ADVICE & REMARKS</h3>

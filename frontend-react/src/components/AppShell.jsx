@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * AppShell — Shared navigation shell with TopAppBar + SideNav + BottomNav
@@ -38,6 +38,10 @@ export default function AppShell({
         </div>
         <div className="app-bar-actions">
           <span className={`status-dot ${backendAvailable ? 'online' : 'offline'}`} />
+          <button className="app-bar-btn app-bar-cta" onClick={onNewConsultation} title="New Consultation">
+            <span className="material-symbols-outlined">add</span>
+            <span className="app-bar-cta-label">New Consultation</span>
+          </button>
           <button
             className="app-bar-btn"
             onClick={() => onNavigate('profile')}
@@ -85,10 +89,6 @@ export default function AppShell({
           ))}
         </div>
 
-        <button className="side-nav-cta" onClick={onNewConsultation}>
-          <span className="material-symbols-outlined">add</span>
-          New Consultation
-        </button>
       </nav>
 
       {/* ── Main Content ── */}

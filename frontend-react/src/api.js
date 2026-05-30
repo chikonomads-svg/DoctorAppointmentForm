@@ -65,17 +65,31 @@ export async function deletePrescription(id) {
 }
 
 export async function searchMedicines(name) {
+    let results = [];
     // Try CSV search first (faster, no DB needed)
     try {
-        const res = await fetch(`${CSV_MED_API}?q=${encodeURIComponent(name)}&limit=20`);
+        const res = await fetch(`${CSV_MED_API}?q=${encodeURIComponent(name)}&limit=30`);
         if (res.ok) {
             const data = await res.json();
-            if (data?.data?.length) return data.data;
+            if (data?.data?.length) results = data.data;
         }
     } catch { /* fall through */ }
-    // Fallback to DB search
-    const res = await fetch(`${MEDICINE_API}?name=${encodeURIComponent(name)}`);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data?.data || [];
+    // Fallback to DB search if CSV returned nothing
+    if (results.length === 0) {
+        try {
+            const res = await fetch(`${MEDICINE_API}?name=${encodeURIComponent(name)}`);
+            if (res.ok) {
+                const data = await res.json();
+                results = data?.data || [];
+            }
+        } catch { return []; }
+    }
+    // Deduplicate by name — keep first occurrence only
+    const seen = new Set();
+    return results.filter(d => {
+        const key = (d.name || '').toLowerCase().trim();
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
 }
