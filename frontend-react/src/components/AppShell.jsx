@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 /**
- * AppShell — Shared navigation shell with TopAppBar + SideNav + BottomNav
- * Based on "Clinical Precision" design from Figma
+ * AppShell — Shared navigation shell with TopAppBar + collapsible SideNav + BottomNav
  */
 export default function AppShell({
   activeView,
@@ -12,6 +11,8 @@ export default function AppShell({
   backendAvailable,
   children,
 }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const navItems = [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
     { id: 'patients', icon: 'person_search', label: 'Patients' },
@@ -31,10 +32,15 @@ export default function AppShell({
   return (
     <>
       {/* ── TopAppBar ── */}
-      <header className="app-bar">
-        <div className="app-bar-brand">
-          <span className="app-bar-brand-hindi">आरोग्य क्लिनिक</span>
-          <h1 className="app-bar-brand-name">Arogya Clinic</h1>
+      <header className={`app-bar ${sidebarOpen ? '' : 'app-bar-expanded'}`}>
+        <div className="app-bar-left">
+          <button className="app-bar-btn app-bar-hamburger" onClick={() => setSidebarOpen(s => !s)} title="Toggle Sidebar">
+            <span className="material-symbols-outlined">menu</span>
+          </button>
+          <div className="app-bar-brand">
+            <span className="app-bar-brand-hindi">आरोग्य क्लिनिक</span>
+            <h1 className="app-bar-brand-name">Arogya Clinic</h1>
+          </div>
         </div>
         <div className="app-bar-actions">
           <span className={`status-dot ${backendAvailable ? 'online' : 'offline'}`} />
@@ -62,8 +68,8 @@ export default function AppShell({
         </div>
       </header>
 
-      {/* ── SideNav (Desktop) ── */}
-      <nav className="side-nav">
+      {/* ── SideNav (Desktop, collapsible) ── */}
+      <nav className={`side-nav ${sidebarOpen ? 'side-nav-open' : 'side-nav-closed'}`}>
         <div className="side-nav-profile">
           <div className="side-nav-avatar">
             <div className="side-nav-avatar-placeholder">
@@ -88,11 +94,13 @@ export default function AppShell({
             </button>
           ))}
         </div>
-
       </nav>
 
+      {/* ── Overlay to close sidebar on mobile ── */}
+      {sidebarOpen && <div className="side-overlay" onClick={() => setSidebarOpen(false)} />}
+
       {/* ── Main Content ── */}
-      <main className="main-content">
+      <main className={`main-content ${sidebarOpen ? '' : 'main-content-full'}`}>
         {children}
       </main>
 

@@ -1,18 +1,22 @@
 """
 routes/csv_medicine.py
-----------------------
-Fast in-memory medicine search from the local product CSV.
-Loaded once on startup, searched with substring matching (case-insensitive).
+---------------------
+Fast in-memory medicine search from the pre-built medicine_index.json.
+Combines data from:
+1. Pre-built Lucene search indexes (data/medicine, data/generic, data/substance)
+2. PMBJP Product List CSV
+
+Loaded once at startup, searched with substring matching (case-insensitive).
 """
 from __future__ import annotations
-import csv, os, unicodedata
+import json, os, unicodedata
 from functools import lru_cache
 from fastapi import APIRouter, Query
 
 router = APIRouter(prefix="/api/medicine", tags=["Medicine Search"])
 
-CSV_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                        "Product List_5_3_2026 @ 20_4_46.csv")
+INDEX_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                          "medicine_index.json")
 
 
 def _normalize(s: str) -> str:
@@ -23,20 +27,15 @@ def _normalize(s: str) -> str:
 
 @lru_cache(maxsize=1)
 def _load_drugs() -> list[dict]:
-    drugs: list[dict] = []
-    if not os.path.exists(CSV_PATH):
-        return drugs
-    with open(CSV_PATH, newline="", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            drugs.append({
-                "id":         row.get("Drug Code", "").strip(),
-                "name":       row.get("Generic Name", "").strip(),
-                "form":       row.get("Unit Size", "").strip(),
-                "group_name": row.get("Group Name", "").strip(),
-                "mrp":        row.get("MRP", "").strip(),
-                "_norm":      _normalize(row.get("Generic Name", "")),
-            })
+    """Load the pre-built medicine index. Returns empty list if not found."""
+    if not os.path.exists(INDEX_PATH):
+        return []
+    with open(INDEX_PATH, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    drugs = data.get("data", [])
+    # Pre-compute normalized names for faster searching
+    for d in drugs:
+        d["_norm"] = _normalize(d.get("name", ""))
     return drugs
 
 
@@ -46,7 +45,7 @@ def csv_search(
     limit: int = Query(20, le=50),
 ):
     """
-    Real-time search from the local Product List CSV.
+    Real-time medicine search from the combined index.
     Returns up to `limit` results ordered by whether the name STARTS with the query.
     """
     needle = _normalize(q)
@@ -56,9 +55,10 @@ def csv_search(
     contains: list[dict] = []
 
     for d in drugs:
-        if d["_norm"].startswith(needle):
+        norm = d.get("_norm", "")
+        if norm.startswith(needle):
             starts.append(d)
-        elif needle in d["_norm"]:
+        elif needle in norm:
             contains.append(d)
 
     results = (starts + contains)[:limit]
@@ -68,14 +68,14 @@ def csv_search(
         "count": len(results),
         "data": [
             {
-                "id":         r["id"],
-                "name":       r["name"],
-                "form":       r["form"],
-                "group_name": r["group_name"],
-                "mrp":        r["mrp"],
-                "manufacturer": {"name": "PMBJP Generic"},
-                "price": {"mrp": r["mrp"], "final_price": r["mrp"], "discount_perc": 0},
-                "in_stock": True,
+                "id":         r.get("id", ""),
+                "name":       r.get("name", ""),
+                "form":       r.get("form", ""),
+                "group_name": r.get("group_name", ""),
+                "mrp":        r.get("mrp", ""),
+                "manufacturer": r.get("manufacturer", {"name": "Generic"}),
+                "price":      r.get("price", {"mrp": "", "final_price": "", "discount_perc": 0}),
+                "in_stock":   r.get("in_stock", True),
             }
             for r in results
         ],
@@ -86,5 +86,5 @@ def csv_search(
 def csv_groups():
     """Return all unique drug groups for filter UI."""
     drugs = _load_drugs()
-    groups = sorted({d["group_name"] for d in drugs if d["group_name"]})
+    groups = sorted({d.get("group_name", "") for d in drugs if d.get("group_name")})
     return {"groups": groups}
