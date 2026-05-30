@@ -43,7 +43,7 @@ export default function Login({ onLogin }) {
 
     // ── Demo Login ────────────────────────────────────────────────────────────
     const handleDemoLogin = () => {
-        const demoUser = { id: 'demo', name: 'Dr. Demo', email: 'demo@drdeepak.in', role: 'doctor' };
+        const demoUser = { id: 'dr-deepak-kumar', name: 'Dr. Deepak Kumar', email: 'deepakkumar21121995@gmail.com', role: 'doctor', phone: '+91 9999438183', qualification: 'MBBS, MD (General Medicine)', clinicName: 'Arogya Clinic', city: 'Muzaffarpur, Bihar' };
         sessionStorage.setItem('dd_user', JSON.stringify(demoUser));
         onLogin(demoUser);
     };

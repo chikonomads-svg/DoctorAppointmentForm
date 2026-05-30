@@ -6,9 +6,9 @@ import React, { useState } from 'react';
  */
 export default function Settings() {
   const [clinicName] = useState('Arogya Clinic');
-  const [regNo] = useState('UP/KN/2023/12345');
-  const [phone] = useState('+91 9876543210');
-  const [address] = useState('12/45-B, Medical Square, Civil Lines, Kanpur, Uttar Pradesh - 208001');
+  const [regNo] = useState('BR/12345');
+  const [phone] = useState('+91 9999438183');
+  const [address] = useState('Saktidharamkata Bada Jagganath, near God Father Public School, Muzaffarpur, Bihar - 842004');
   const [language, setLanguage] = useState('en');
   const [whatsappNotify, setWhatsappNotify] = useState(true);
 

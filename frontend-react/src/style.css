@@ -308,6 +308,21 @@
   font-weight: 400;
   color: var(--on-surface-variant);
   margin-top: 2px;
+  max-width: 700px;
+}
+.dash-welcome-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-sm);
+  flex-wrap: wrap;
+}
+.dash-welcome-meta span {
+  font-size: 13px;
+  color: var(--on-surface-variant);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Stat Bento Grid */

@@ -56,7 +56,11 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
       {/* ── Welcome Header ── */}
       <div className="dash-welcome">
         <h1>Welcome, {user?.name || 'Dr. Deepak Kumar'}</h1>
-        <p>Here's an overview of your clinic's activity today.</p>
+        <p>{user?.name || 'Dr. Deepak Kumar'} — Your Trusted Healthcare Partner. We provide guideline-directed comprehensive care for Diabetes, Blood Pressure, Thyroid, Asthma, COPD, and Abdominal diseases, prioritizing your long-term wellness.</p>
+        <div className="dash-welcome-meta">
+          <span><span className="material-symbols-outlined" style={{fontSize:16,verticalAlign:'text-bottom'}}>location_on</span> Muzaffarpur, Bihar</span>
+          <span><span className="material-symbols-outlined" style={{fontSize:16,verticalAlign:'text-bottom'}}>call</span> +91 9999438183</span>
+        </div>
       </div>
 
       {/* ── Stat Badges Bento Grid ── */}
@@ -202,19 +206,47 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
           <div style={{
             width: '100%', height: '100%',
             background: 'linear-gradient(135deg, #0b6e8a 0%, #00546b 100%)',
-            display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
             padding: 'var(--space-lg)',
+            gap: 'var(--space-base)',
           }}>
-            <h4 style={{ color: 'white', fontSize: 20, fontWeight: 600 }}>Advanced Diagnostics</h4>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14 }}>Our new AI-powered analysis tool is now live.</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+              <span className="material-symbols-outlined" style={{ color: 'white', fontSize: 24 }}>school</span>
+              <h4 style={{ color: 'white', fontSize: 18, fontWeight: 600 }}>Academic Excellence</h4>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, lineHeight: 1.5 }}>
+              With foundational training from SKMCH and advanced MD General medicine specialization from DMCH Darbhanga, Dr. Deepak Kumar brings institutional expertise to private practice.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginTop: 'auto' }}>
+              <span className="material-symbols-outlined" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 20 }}>verified_user</span>
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>MBBS (SKMCH) · MD General Medicine (DMCH Darbhanga)</span>
+            </div>
           </div>
         </div>
         <div className="dash-protocol-card">
           <div>
-            <h4>Medical Insight of the Day</h4>
-            <p>Proactive screening for cardiovascular health in patients over 40 reduces risk factors by 30% through early intervention.</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: 'var(--space-sm)' }}>
+              <span className="material-symbols-outlined" style={{ color: 'var(--on-primary-container)', fontSize: 24 }}>patient_list</span>
+              <h4>Why Choose Our Practice</h4>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-base)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-sm)' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 18, color: 'var(--on-primary-container)' }}>medical_services</span>
+                <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13 }}>Modern Facility — Equipped with latest diagnostic tools</p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-sm)' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 18, color: 'var(--on-primary-container)' }}>verified_user</span>
+                <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13 }}>Verified Experience — Trusted name in Muzaffarpur medical community</p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-sm)' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 18, color: 'var(--on-primary-container)' }}>favorite</span>
+                <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13 }}>Patient First — Tailored treatment plans with empathy</p>
+              </div>
+            </div>
           </div>
-          <button className="dash-protocol-btn">Read Protocol</button>
+          <button className="dash-protocol-btn" onClick={() => onNavigate('profile')}>
+            View Full Profile
+          </button>
         </div>
       </div>
     </>
