@@ -39,3 +39,7 @@ Thumbs.db
 *.log
 npm-debug.log*
 
+# Generated search database (48MB, built at deploy time)
+backend/medicine_search.db
+backend/medicine_index.json
+
