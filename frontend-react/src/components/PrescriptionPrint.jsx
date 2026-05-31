@@ -1,58 +1,28 @@
 import React from 'react';
 import './PrescriptionPrint.css';
 
-/* ─────────────────────────────────────────────
-   Arogya Clinic — PrescriptionPrint.jsx
-   Exact replica of dr_deepak_kumar_prescription_template.pdf
-   ───────────────────────────────────────────── */
-
 export default function PrescriptionPrint({ data = {} }) {
   const {
-    // Patient
     patient_name = '', patient_age = '', patient_sex = '',
     patient_weight = '', patient_address = '', patient_date = '',
     follow_up = '',
-
-    // Clinic
     clinic_address = 'बड़ा जगनाथ, शक्ति धर्मकांटा, अहियापुर, मुजफ्फरपुर',
     clinic_phone = '8877556142',
     reg_no = 'BCMR50223',
-
-    // Vitals
     vital_bp = '', vital_pulse = '', vital_spo2 = '',
     vital_temp = '', vital_rr = '', vital_grbs = '',
-
-    // Clinical Exam
     ex_pallor = '', ex_icterus = '', ex_cyanosis = '',
     ex_clubbing = '', ex_edema = '',
-
-    // Systemic Exam
     exam_rs = '', exam_cvs = '', exam_cns = '', exam_pa = '',
-
-    // Comorbidities
     cb_diabetes = false, cb_hypertension = false, cb_copd = false,
     cb_tb = false, cb_thyroid = false, cb_cad = false,
     cb_ckd = false, cb_stroke = false,
-
-    // Addictions
     cb_smoking = false, cb_alcohol = false,
     cb_tobacco = false, cb_iv_drug = false,
-
-    // Clinical
     chief_complaints = '', provisional_diagnosis = '', investigations = '',
-
-    // Advice
-    advice = '',
-
-    // OP No from id or uhid
-    id = '', patient_uhid = '',
-
-    // Medications (nested inside data)
+    advice = '', patient_uhid = '', id = '',
     medications: meds = [],
   } = data;
-
-  // Use uhid or id as OP number
-  const op_no = patient_uhid || id || '';
 
   const formatDate = (d) => {
     if (!d) return new Date().toLocaleDateString('en-IN');
@@ -70,11 +40,8 @@ export default function PrescriptionPrint({ data = {} }) {
   return (
     <div className="rx-page">
 
-      {/* ══════════════════════════════════════
-          HEADER
-      ══════════════════════════════════════ */}
+      {/* HEADER — 3 equal sections */}
       <div className="rx-header">
-        {/* Left logo */}
         <div className="rx-header-logo">
           <div className="rx-caduceus">⚕</div>
           <div className="rx-logo-text">
@@ -84,19 +51,15 @@ export default function PrescriptionPrint({ data = {} }) {
           </div>
         </div>
 
-        {/* Center — Hindi title */}
         <div className="rx-header-center">
           <div className="rx-hindi-title">आरोग्य क्लिनिक</div>
-          <div className="rx-hindi-address">
-            बड़ा जगनाथ, शक्ति धर्मकांटा, अहियापुर, मुजफ्फरपुर, 842001
-          </div>
+          <div className="rx-hindi-address">बड़ा जगनाथ, शक्ति धर्मकांटा, अहियापुर, मुजफ्फरपुर, 842001</div>
         </div>
 
-        {/* Right — QR + Doctor info */}
         <div className="rx-header-right">
           <div className="rx-qr-placeholder">
             <div className="rx-qr-inner">
-              <svg viewBox="0 0 100 100" width="60" height="60">
+              <svg viewBox="0 0 100 100" width="55" height="55">
                 <rect x="10" y="10" width="30" height="30" fill="none" stroke="#000" strokeWidth="3"/>
                 <rect x="15" y="15" width="20" height="20" fill="#000"/>
                 <rect x="60" y="10" width="30" height="30" fill="none" stroke="#000" strokeWidth="3"/>
@@ -108,12 +71,10 @@ export default function PrescriptionPrint({ data = {} }) {
                 <rect x="64" y="48" width="6" height="6" fill="#000"/>
                 <rect x="48" y="56" width="6" height="6" fill="#000"/>
                 <rect x="64" y="56" width="6" height="6" fill="#000"/>
-                <rect x="48" y="64" width="6" height="6" fill="#000"/>
-                <rect x="56" y="64" width="6" height="6" fill="#000"/>
                 <rect x="72" y="56" width="6" height="6" fill="#000"/>
-                <rect x="80" y="64" width="6" height="6" fill="#000"/>
-                <rect x="72" y="72" width="6" height="6" fill="#000"/>
-                <rect x="80" y="80" width="6" height="6" fill="#000"/>
+                <rect x="48" y="64" width="6" height="6" fill="#000"/>
+                <rect x="72" y="64" width="6" height="6" fill="#000"/>
+                <rect x="80" y="72" width="6" height="6" fill="#000"/>
               </svg>
             </div>
           </div>
@@ -125,7 +86,7 @@ export default function PrescriptionPrint({ data = {} }) {
         </div>
       </div>
 
-      {/* Clinic info bar */}
+      {/* CLINIC BAR */}
       <div className="rx-clinic-bar">
         <span><strong>Clinic Address:</strong> {clinic_address}</span>
         <span><strong>Mobile No.:-</strong> {clinic_phone}</span>
@@ -133,43 +94,36 @@ export default function PrescriptionPrint({ data = {} }) {
         <span><strong>06 AM–09 AM & 03 PM–06 PM</strong></span>
       </div>
 
-      {/* ══════════════════════════════════════
-          PATIENT ROW
-      ══════════════════════════════════════ */}
+      {/* PATIENT TABLE */}
       <table className="rx-patient-table">
         <tbody>
           <tr>
             <td className="rx-pt-cell rx-pt-label-cell"><strong>Date</strong></td>
-            <td className="rx-pt-cell rx-pt-date">{formatDate(patient_date)}</td>
+            <td className="rx-pt-cell" style={{width:'22mm'}}>{formatDate(patient_date)}</td>
             <td className="rx-pt-cell rx-pt-label-cell"><strong>Patient Name</strong></td>
-            <td className="rx-pt-cell rx-pt-name">{patient_name}</td>
+            <td className="rx-pt-cell">{patient_name}</td>
             <td className="rx-pt-cell rx-pt-label-cell"><strong>Weight</strong></td>
-            <td className="rx-pt-cell rx-pt-small">{patient_weight ? `${patient_weight} kg` : ''}</td>
-            <td className="rx-pt-cell rx-pt-label-cell"><strong>OP No</strong></td>
-            <td className="rx-pt-cell rx-pt-small">{op_no}</td>
+            <td className="rx-pt-cell" style={{width:'14mm'}}>{patient_weight ? `${patient_weight} kg` : ''}</td>
           </tr>
           <tr>
             <td className="rx-pt-cell rx-pt-label-cell"><strong>Sex</strong></td>
             <td className="rx-pt-cell">{patient_sex}</td>
             <td className="rx-pt-cell rx-pt-label-cell"><strong>Age</strong></td>
             <td className="rx-pt-cell">{patient_age ? `${patient_age} yrs` : ''}</td>
-            <td className="rx-pt-cell rx-pt-label-cell" colSpan="1"><strong>Address</strong></td>
-            <td className="rx-pt-cell" colSpan="3">{patient_address}</td>
+            <td className="rx-pt-cell rx-pt-label-cell"><strong>Address</strong></td>
+            <td className="rx-pt-cell">{patient_address}</td>
           </tr>
         </tbody>
       </table>
 
-      {/* ══════════════════════════════════════
-          BODY — Two Columns
-      ══════════════════════════════════════ */}
+      {/* BODY */}
       <div className="rx-body">
 
-        {/* ── LEFT COLUMN ── */}
+        {/* LEFT COLUMN */}
         <div className="rx-left-col">
 
-          {/* 1. Vitals */}
           <div className="rx-section">
-            <div className="rx-section-title"><span className="rx-num">1.</span> Vitals</div>
+            <div className="rx-section-title">1. Vitals</div>
             <div className="rx-field-row"><span className="rx-field-label">BP:</span><span className="rx-field-line">{vital_bp}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">Pulse:</span><span className="rx-field-line">{vital_pulse}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">SPO<sub>2</sub>:</span><span className="rx-field-line">{vital_spo2}</span></div>
@@ -178,9 +132,8 @@ export default function PrescriptionPrint({ data = {} }) {
             <div className="rx-field-row"><span className="rx-field-label">GRBS:</span><span className="rx-field-line">{vital_grbs}</span></div>
           </div>
 
-          {/* 2. Clinical Examination */}
           <div className="rx-section">
-            <div className="rx-section-title"><span className="rx-num">2.</span> Clinical Examination</div>
+            <div className="rx-section-title">2. Clinical Examination</div>
             <div className="rx-field-row"><span className="rx-field-label">Pallor:</span><span className="rx-field-line">{examVal(ex_pallor)}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">Icterus:</span><span className="rx-field-line">{examVal(ex_icterus)}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">Cyanosis:</span><span className="rx-field-line">{examVal(ex_cyanosis)}</span></div>
@@ -188,18 +141,16 @@ export default function PrescriptionPrint({ data = {} }) {
             <div className="rx-field-row"><span className="rx-field-label">Edema:</span><span className="rx-field-line">{examVal(ex_edema)}</span></div>
           </div>
 
-          {/* 3. Systemic Examination */}
           <div className="rx-section">
-            <div className="rx-section-title"><span className="rx-num">3.</span> Systemic Examination</div>
+            <div className="rx-section-title">3. Systemic Examination</div>
             <div className="rx-field-row"><span className="rx-field-label">Chest (Rs):</span><span className="rx-field-line">{exam_rs}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">CVS:</span><span className="rx-field-line">{exam_cvs}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">CNS:</span><span className="rx-field-line">{exam_cns}</span></div>
             <div className="rx-field-row"><span className="rx-field-label">P/A:</span><span className="rx-field-line">{exam_pa}</span></div>
           </div>
 
-          {/* 4. Comorbidities */}
           <div className="rx-section">
-            <div className="rx-section-title"><span className="rx-num">4.</span> Comorbidities</div>
+            <div className="rx-section-title">4. Comorbidities</div>
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_diabetes ? 'rx-cb-checked' : ''}`}>{cb_diabetes ? '☑' : '☐'}</span> Diabetes</div>
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_hypertension ? 'rx-cb-checked' : ''}`}>{cb_hypertension ? '☑' : '☐'}</span> Hypertension</div>
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_copd ? 'rx-cb-checked' : ''}`}>{cb_copd ? '☑' : '☐'}</span> COPD / Asthma</div>
@@ -210,9 +161,8 @@ export default function PrescriptionPrint({ data = {} }) {
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_stroke ? 'rx-cb-checked' : ''}`}>{cb_stroke ? '☑' : '☐'}</span> Stroke</div>
           </div>
 
-          {/* 5. Addiction */}
           <div className="rx-section">
-            <div className="rx-section-title"><span className="rx-num">5.</span> Addiction</div>
+            <div className="rx-section-title">5. Addiction</div>
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_smoking ? 'rx-cb-checked' : ''}`}>{cb_smoking ? '☑' : '☐'}</span> Smoking</div>
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_alcohol ? 'rx-cb-checked' : ''}`}>{cb_alcohol ? '☑' : '☐'}</span> Alcohol</div>
             <div className="rx-checkbox-row"><span className={`rx-cb ${cb_tobacco ? 'rx-cb-checked' : ''}`}>{cb_tobacco ? '☑' : '☐'}</span> Tobacco / Gutkha</div>
@@ -220,43 +170,39 @@ export default function PrescriptionPrint({ data = {} }) {
             <div className="rx-checkbox-row"><span className={`rx-cb ${noAddictions ? 'rx-cb-checked' : ''}`}>{noAddictions ? '☑' : '☐'}</span> None</div>
           </div>
 
-          {/* 6. Investigations */}
           <div className="rx-section rx-section-investigations">
-            <div className="rx-section-title"><span className="rx-num">6.</span> Investigations</div>
+            <div className="rx-section-title">6. Investigations</div>
             <div className="rx-investigations-text">{investigations}</div>
           </div>
 
-          {/* Diet Chart */}
+          {/* Diet Chart — card layout */}
           <div className="rx-diet-chart">
-            <div className="rx-diet-title">Diet Routine</div>
+            <div className="rx-diet-title">🥗 Diet Routine</div>
             <div className="rx-diet-row">
               <div className="rx-diet-item">
-                <span className="rx-diet-icon">🌅</span>
-                <span className="rx-diet-label">Morning Breakfast</span>
-                <span className="rx-diet-desc">1 bowl lukewarm milk · 1–2 roti + fruits · Plus 1 glass green tea</span>
+                <div className="rx-diet-icon">🌅</div>
+                <div className="rx-diet-label">Morning Breakfast</div>
+                <div className="rx-diet-desc">1 bowl lukewarm milk with muesli/oats · 1–2 roti + seasonal fruits · 1 glass green tea</div>
               </div>
               <div className="rx-diet-item">
-                <span className="rx-diet-icon">☀️</span>
-                <span className="rx-diet-label">Lunch</span>
-                <span className="rx-diet-desc">1 bowl daal · ¼ cup rice · 1 gm paneer · seasonal fruit</span>
+                <div className="rx-diet-icon">☀️</div>
+                <div className="rx-diet-label">Lunch</div>
+                <div className="rx-diet-desc">1 bowl daal · ¼ cup boiled rice · 50 gm paneer · seasonal fruit</div>
               </div>
               <div className="rx-diet-item">
-                <span className="rx-diet-icon">🌙</span>
-                <span className="rx-diet-label">Dinner</span>
-                <span className="rx-diet-desc">Daal 1 cup · roti + salad · 2 boiled eggs · 50 gm paneer · seasonal fruit</span>
+                <div className="rx-diet-icon">🌙</div>
+                <div className="rx-diet-label">Dinner</div>
+                <div className="rx-diet-desc">Daal 1 cup · roti + salad · 2 boiled eggs · 50 gm paneer · seasonal fruit</div>
               </div>
             </div>
           </div>
 
         </div>{/* end left col */}
 
-        {/* ── RIGHT COLUMN ── */}
+        {/* RIGHT COLUMN */}
         <div className="rx-right-col">
-
-          {/* Rx symbol */}
           <div className="rx-symbol">℞</div>
 
-          {/* Chief Complaints */}
           <div className="rx-right-section">
             <div className="rx-right-label">Chief Complaints: -</div>
             <div className="rx-right-content rx-complaints-content">
@@ -267,7 +213,6 @@ export default function PrescriptionPrint({ data = {} }) {
             </div>
           </div>
 
-          {/* Provisional Diagnosis */}
           <div className="rx-right-section">
             <div className="rx-right-label">Provisional Diagnosis: -</div>
             <div className="rx-right-content rx-diagnosis-content">
@@ -327,7 +272,7 @@ export default function PrescriptionPrint({ data = {} }) {
             </div>
           )}
 
-          {/* Signature block */}
+          {/* SIGNATURE */}
           <div className="rx-signature-block">
             <div className="rx-sig-line">Signature: _______________</div>
             <div className="rx-sig-name">Dr. Deepak Kumar</div>
@@ -337,14 +282,10 @@ export default function PrescriptionPrint({ data = {} }) {
         </div>{/* end right col */}
       </div>{/* end body */}
 
-      {/* Footer */}
+      {/* FOOTER */}
       <div className="rx-footer">
-        <div className="rx-footer-note">
-          This is a computer-generated prescription. Valid for 21 days from the date of issue.
-        </div>
-        <div className="rx-footer-timing">
-          OPD Timings: 06 AM–09 AM & 03 PM–06 PM
-        </div>
+        <div className="rx-footer-note">This is a computer-generated prescription. Valid for 21 days from the date of issue.</div>
+        <div className="rx-footer-timing">OPD Timings: 06 AM–09 AM & 03 PM–06 PM</div>
       </div>
 
     </div>

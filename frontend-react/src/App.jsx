@@ -307,7 +307,6 @@ export default function App() {
             <div className="rx-patient-field"><label>Age</label><input type="number" placeholder="Years" value={data.patient_age||''} onChange={e=>update({patient_age:e.target.value})}/></div>
             <div className="rx-patient-field"><label>Sex</label><select value={data.patient_sex||''} onChange={e=>update({patient_sex:e.target.value})}><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
             <div className="rx-patient-field"><label>Weight (kg)</label><input type="number" placeholder="00" value={data.patient_weight||''} onChange={e=>update({patient_weight:e.target.value})}/></div>
-            <div className="rx-patient-field"><label>OP No</label><input type="text" value={data.patient_uhid||'AC-2024-001'} onChange={e=>update({patient_uhid:e.target.value})}/></div>
             <div className="rx-patient-field" style={{gridColumn:'span 2'}}><label>Date</label><input type="date" value={data.patient_date||''} onChange={e=>update({patient_date:e.target.value})}/></div>
           </div>
           <div className="rx-two-col">
