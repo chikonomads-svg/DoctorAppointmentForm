@@ -12,7 +12,14 @@ router = APIRouter(prefix="/api/dashboard", tags=["Dashboard"])
 
 @router.get("/stats")
 def get_stats():
-    conn = get_connection()
+    try:
+        conn = get_connection()
+    except Exception as e:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=503,
+            content={"error": "Database unavailable", "detail": str(e)},
+        )
     try:
         cur = conn.cursor()
 

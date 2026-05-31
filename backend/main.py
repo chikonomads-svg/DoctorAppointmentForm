@@ -4,13 +4,20 @@ main.py
 FastAPI application entry point for the Prescription Form backend.
 
 Run with:
-    cd Form_web
-    uvicorn backend.main:app --reload --port 8000
+    cd Form_web/backend && uvicorn main:app --reload --port 8000
 
 API docs available at:
     http://localhost:8000/docs      (Swagger UI)
     http://localhost:8000/redoc     (ReDoc)
 """
+
+import os
+import sys
+
+# Ensure backend/ is in Python path so imports work from any CWD
+_BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+if _BACKEND_DIR not in sys.path:
+    sys.path.insert(0, _BACKEND_DIR)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

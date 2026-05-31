@@ -17,11 +17,24 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 def get_connection():
     if not DATABASE_URL:
         raise ValueError("DATABASE_URL is not set in backend/.env")
-    return psycopg2.connect(DATABASE_URL, cursor_factory=DictCursor)
+    return psycopg2.connect(
+        DATABASE_URL,
+        cursor_factory=DictCursor,
+        connect_timeout=10,
+        keepalives=1,
+        keepalives_idle=30,
+        keepalives_interval=10,
+        keepalives_count=5,
+    )
 
 def init_db() -> None:
     print("[DB] Initializing PostgreSQL database...")
-    conn = get_connection()
+    try:
+        conn = get_connection()
+    except Exception as e:
+        print(f"[DB] WARNING: Could not connect to PostgreSQL: {e}")
+        print("[DB] Running in limited mode — DB-dependent features (dashboard, save/load) unavailable.")
+        return
     cursor = conn.cursor()
 
     # ── Users table ───────────────────────────────────────────────────────────

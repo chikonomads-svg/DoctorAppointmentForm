@@ -1,379 +1,544 @@
 /* ═══════════════════════════════════════════════════════
-   PrescriptionPrint.css — Arogya Clinic Prescription
-   Matches the paper PDF layout exactly (Hindi letterhead,
-   two-column body, diet chart, signature)
+   PrescriptionPrint.css
+   Exact replica of dr_deepak_kumar_prescription_template.pdf
+   A4: 210mm × 297mm  |  Margins: 8mm all sides
    ═══════════════════════════════════════════════════════ */
 
-/* ── On-screen preview ── */
-.rx-print-page {
-    background: #fff;
-    color: #111;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 13px;
-    line-height: 1.55;
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 32px 40px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
-    border-radius: 4px;
+/* ── Screen preview ── */
+.rx-page {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 10pt;
+  color: #000;
+  background: #fff;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 8mm 8mm 6mm 8mm;
+  box-sizing: border-box;
+  line-height: 1.35;
 }
 
-/* ── Clinic Header / Letterhead ── */
-.rx-header {
-    margin-bottom: 10px;
-}
+/* ── Print ── */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-.rx-header-top {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
+  body { margin: 0; padding: 0; background: white; }
+  #root > *:not(.rx-page) { display: none !important; }
 
-.rx-logo-area {
-    flex-shrink: 0;
-}
-
-.rx-logo-icon {
-    font-size: 42px;
-    line-height: 1;
-}
-
-.rx-header-text {
-    flex: 1;
-}
-
-.rx-clinic-name {
-    font-size: 22px;
-    font-weight: bold;
-    margin: 0;
-    line-height: 1.2;
-    font-family: 'Noto Sans Devanagari', 'Times New Roman', serif;
-}
-
-.rx-clinic-name-en {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 2px 0;
-    color: #0B6E8A;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.rx-doctor-name {
-    font-size: 14px;
-    font-weight: bold;
-    margin: 4px 0 2px;
-    color: #333;
-}
-
-.rx-clinic-addr {
-    font-size: 12px;
-    margin: 2px 0;
-    color: #555;
-}
-
-.rx-clinic-contact {
-    font-size: 12px;
-    margin: 2px 0;
-    color: #555;
-}
-
-.rx-divider {
-    border: none;
-    border-top: 2px solid #0B6E8A;
-    margin: 8px 0;
-}
-
-/* ── Patient details row ── */
-.rx-patient-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-    padding: 4px 0;
-    font-size: 13px;
-}
-
-.rx-label-value {
-    white-space: nowrap;
-}
-
-.rx-label {
-    font-weight: bold;
-    color: #333;
-}
-
-/* ── Two-column layout ── */
-.rx-two-col {
-    display: flex;
-    gap: 24px;
-    margin: 4px 0;
-}
-
-.rx-left-col {
-    flex: 1;
-    min-width: 0;
-}
-
-.rx-right-col {
-    flex: 1;
-    min-width: 0;
-}
-
-/* ── Blocks inside columns ── */
-.rx-block {
-    margin-bottom: 12px;
-}
-
-.rx-block-title {
-    font-size: 12.5px;
-    font-weight: bold;
-    margin: 0 0 4px;
-    padding-bottom: 1px;
-    border-bottom: 1px solid #bbb;
-    color: #0B6E8A;
-}
-
-/* ── Vitals grid ── */
-.rx-vitals-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 14px;
-    font-size: 12.5px;
-}
-
-/* ── Inline booleans (physical exam, comorbidities) ── */
-.rx-inline-bools {
-    font-size: 12.5px;
-    margin: 0;
-    line-height: 1.6;
-}
-
-/* ── Bullet / plain lists ── */
-.rx-bullet-list,
-.rx-plain-list {
-    margin: 0;
-    padding-left: 18px;
-    font-size: 12.5px;
-}
-
-.rx-bullet-list li {
-    list-style-type: disc;
-    margin-bottom: 2px;
-}
-
-.rx-plain-list li {
-    list-style-type: none;
-    margin-bottom: 2px;
-}
-
-/* ── Prescription table ── */
-.rx-med-table {
+  .rx-page {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    margin-top: 4px;
+    margin: 0;
+    padding: 8mm 8mm 6mm 8mm;
+    box-shadow: none;
+    page-break-after: avoid;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
 }
 
-.rx-med-table th,
-.rx-med-table td {
-    border: 1px solid #888;
-    padding: 4px 6px;
-    text-align: left;
-    vertical-align: top;
+/* ══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.rx-header {
+  display: flex;
+  align-items: center;
+  gap: 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 2.5pt solid #0B6E8A;
+  margin-bottom: 2mm;
 }
 
-.rx-med-table thead th {
-    background: #f0f7fa;
-    font-weight: bold;
-    font-size: 11.5px;
+/* Left — logo block */
+.rx-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  min-width: 28mm;
+  flex-shrink: 0;
 }
 
-.rx-med-table tbody tr:nth-child(even) {
-    background: #fafafa;
+.rx-caduceus {
+  font-size: 28pt;
+  color: #0B6E8A;
+  line-height: 1;
 }
 
-.rx-empty {
-    color: #888;
-    font-style: italic;
-    margin: 4px 0;
-    font-size: 12px;
+.rx-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
 }
 
-/* ── Diet chart ── */
+.rx-logo-arogya {
+  font-family: 'Times New Roman', serif;
+  font-size: 11pt;
+  font-weight: 900;
+  color: #0B6E8A;
+  letter-spacing: 1px;
+}
+
+.rx-logo-clinic {
+  font-family: 'Times New Roman', serif;
+  font-size: 9pt;
+  font-weight: 700;
+  color: #0B6E8A;
+  letter-spacing: 2px;
+}
+
+.rx-logo-sub {
+  font-size: 6pt;
+  color: #555;
+  letter-spacing: 0.5px;
+  margin-top: 1mm;
+}
+
+/* Center — Hindi title */
+.rx-header-center {
+  flex: 1;
+  text-align: center;
+  padding: 0 2mm;
+}
+
+.rx-hindi-title {
+  font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', serif;
+  font-size: 28pt;
+  font-weight: 900;
+  color: #0B6E8A;
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+.rx-hindi-address {
+  font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', serif;
+  font-size: 9pt;
+  color: #1a1a1a;
+  margin-top: 1mm;
+  font-weight: 600;
+}
+
+/* Right — QR + Doctor */
+.rx-header-right {
+  display: flex;
+  align-items: flex-start;
+  gap: 3mm;
+  min-width: 60mm;
+  flex-shrink: 0;
+}
+
+.rx-qr-placeholder {
+  width: 18mm;
+  height: 18mm;
+  border: 1pt solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.rx-qr-inner { line-height: 0; }
+
+.rx-doctor-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1mm;
+}
+
+.rx-dr-name-en {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #000;
+}
+
+.rx-dr-quals {
+  font-size: 8pt;
+  font-weight: 400;
+}
+
+.rx-dr-name-hi {
+  font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS', serif;
+  font-size: 9pt;
+  font-weight: 600;
+  color: #000;
+}
+
+.rx-dr-quals-hi {
+  font-size: 8pt;
+  font-weight: 400;
+}
+
+.rx-dr-designation {
+  font-size: 8.5pt;
+  color: #000;
+  font-weight: 500;
+}
+
+.rx-reg {
+  font-size: 8pt;
+  color: #333;
+}
+
+/* Clinic info bar */
+.rx-clinic-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4mm;
+  font-size: 8pt;
+  color: #000;
+  padding: 1.5mm 0;
+  border-bottom: 1pt solid #ccc;
+  margin-bottom: 2mm;
+}
+
+.rx-clinic-bar span { white-space: nowrap; }
+
+/* ══════════════════════════════════════
+   PATIENT TABLE
+═══════════════════════════════════════ */
+.rx-patient-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5pt solid #0B6E8A;
+  margin-bottom: 2mm;
+  table-layout: fixed;
+}
+
+.rx-patient-table tr:first-child td {
+  background-color: #E8F4F8;
+}
+
+.rx-pt-cell {
+  border: 1pt solid #0B6E8A;
+  padding: 1.5mm 2mm;
+  font-size: 9pt;
+  vertical-align: middle;
+}
+
+.rx-pt-label-cell {
+  background-color: #D0E8F0;
+  font-weight: 700;
+  font-size: 8.5pt;
+  white-space: nowrap;
+  width: auto;
+}
+
+.rx-pt-date   { width: 20mm; }
+.rx-pt-name   { width: auto; }
+.rx-pt-small  { width: 14mm; }
+
+/* ══════════════════════════════════════
+   BODY — Two Column
+═══════════════════════════════════════ */
+.rx-body {
+  display: flex;
+  gap: 0;
+  border: 1pt solid #999;
+  min-height: 135mm;
+  align-items: stretch;
+}
+
+/* ── LEFT COLUMN ── */
+.rx-left-col {
+  width: 62mm;
+  min-width: 62mm;
+  flex-shrink: 0;
+  border-right: 1.5pt solid #0B6E8A;
+  padding: 2mm 2.5mm;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rx-section {
+  border-bottom: 0.5pt solid #ccc;
+  padding-bottom: 2mm;
+  margin-bottom: 2mm;
+}
+
+.rx-section-investigations {
+  border-bottom: none;
+  flex: 1;
+}
+
+.rx-section-title {
+  font-size: 8.5pt;
+  font-weight: 700;
+  color: #0B6E8A;
+  margin-bottom: 1.5mm;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.rx-num {
+  font-style: normal;
+}
+
+.rx-field-row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1mm;
+  font-size: 8.5pt;
+}
+
+.rx-field-label {
+  font-weight: 600;
+  min-width: 20mm;
+  flex-shrink: 0;
+  color: #222;
+}
+
+.rx-field-line {
+  flex: 1;
+  border-bottom: 0.5pt solid #888;
+  min-height: 4mm;
+  padding-left: 1mm;
+  font-size: 8.5pt;
+}
+
+/* Checkboxes */
+.rx-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5mm;
+  font-size: 8.5pt;
+  margin-bottom: 1mm;
+  color: #111;
+}
+
+.rx-cb {
+  font-size: 10pt;
+  line-height: 1;
+  min-width: 4mm;
+}
+
+.rx-cb-checked {
+  color: #0B6E8A;
+  font-weight: 700;
+}
+
+/* Investigations */
+.rx-section-investigations .rx-investigations-text {
+  font-size: 8pt;
+  min-height: 8mm;
+  white-space: pre-wrap;
+  color: #111;
+}
+
+/* Diet chart */
 .rx-diet-chart {
-    margin-top: 8px;
-    background: #f8fafc;
-    border: 1px solid #d0d8e0;
-    border-radius: 6px;
-    padding: 10px 14px;
+  margin-top: auto;
+  padding-top: 2mm;
+  border-top: 0.5pt solid #ccc;
 }
 
-.rx-diet-grid {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin: 6px 0;
+.rx-diet-title {
+  font-size: 8pt;
+  font-weight: 700;
+  color: #0B6E8A;
+  text-transform: uppercase;
+  margin-bottom: 1.5mm;
+  letter-spacing: 0.3px;
+}
+
+.rx-diet-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
 }
 
 .rx-diet-item {
-    text-align: center;
-    min-width: 90px;
-    flex: 1;
+  display: flex;
+  gap: 1.5mm;
+  align-items: flex-start;
 }
 
 .rx-diet-icon {
-    font-size: 24px;
-    line-height: 1;
+  font-size: 11pt;
+  line-height: 1.2;
+  flex-shrink: 0;
 }
 
 .rx-diet-label {
-    font-weight: bold;
-    font-size: 12px;
-    margin: 2px 0;
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+  min-width: 18mm;
 }
 
-.rx-diet-time {
-    font-size: 11px;
-    color: #555;
+.rx-diet-desc {
+  font-size: 7pt;
+  color: #333;
+  line-height: 1.3;
 }
 
-.rx-diet-note {
-    font-size: 11px;
-    color: #777;
-    font-style: italic;
+/* ── RIGHT COLUMN ── */
+.rx-right-col {
+  flex: 1;
+  padding: 2mm 3mm;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
 }
 
-.rx-diet-arrow {
-    font-size: 18px;
-    color: #0B6E8A;
-    font-weight: bold;
+/* Rx Symbol */
+.rx-symbol {
+  position: absolute;
+  top: 2mm;
+  right: 3mm;
+  font-size: 22pt;
+  color: #0B6E8A;
+  font-family: 'Times New Roman', serif;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.25;
 }
 
-.rx-diet-note-bottom {
-    font-size: 11.5px;
-    margin: 6px 0 0;
-    text-align: center;
-    color: #444;
-    border-top: 1px dashed #ccc;
-    padding-top: 6px;
+.rx-right-section {
+  margin-bottom: 3mm;
 }
 
-/* ── Footer / Signature ── */
-.rx-footer {
-    display: flex;
-    justify-content: space-between;
-    margin: 16px 0 8px;
+.rx-right-label {
+  font-size: 9pt;
+  font-weight: 700;
+  color: #0B6E8A;
+  margin-bottom: 1.5mm;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
 }
 
-.rx-sig-left,
-.rx-sig-right {
-    font-size: 13px;
+.rx-right-content {
+  font-size: 9pt;
+  color: #111;
+  white-space: pre-wrap;
+  min-height: 14mm;
+  line-height: 1.5;
+  padding: 1mm 0;
 }
 
-.rx-sig-left p,
-.rx-sig-right p {
-    margin: 2px 0;
+/* Empty dashed lines when no content */
+.rx-empty-lines { display: flex; flex-direction: column; gap: 4mm; }
+.rx-dline {
+  border-bottom: 0.5pt dashed #bbb;
+  width: 100%;
 }
 
-.rx-sig-space {
-    border-bottom: 1px solid #444;
-    width: 220px;
-    height: 28px;
-    margin: 4px 0;
+.rx-complaints-content  { min-height: 18mm; }
+.rx-diagnosis-content   { min-height: 18mm; }
+
+/* Prescription medication table */
+.rx-rx-section {
+  margin-bottom: 3mm;
+}
+
+.rx-med-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+}
+
+.rx-med-th {
+  background: #0B6E8A;
+  color: #fff;
+  font-size: 7.5pt;
+  font-weight: 600;
+  padding: 1.5mm 1.5mm;
+  border: 0.5pt solid #0B6E8A;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.rx-med-td {
+  border: 0.5pt solid #ccc;
+  padding: 1.5mm 1.5mm;
+  font-size: 8pt;
+  vertical-align: top;
+}
+
+.rx-med-row-even td {
+  background: #F0F7FA;
+}
+
+.rx-med-sno  { width: 5mm;  text-align: center; }
+.rx-med-drug { min-width: 28mm; }
+.rx-med-instr { min-width: 16mm; }
+
+/* Advice */
+.rx-advice-section {
+  margin-bottom: 3mm;
+}
+
+.rx-advice-label {
+  font-size: 8.5pt;
+  font-weight: 700;
+  color: #0B6E8A;
+  margin-bottom: 1.5mm;
+  text-transform: uppercase;
+}
+
+.rx-advice-line {
+  font-size: 8.5pt;
+  color: #222;
+  margin-bottom: 0.8mm;
+  line-height: 1.4;
+}
+
+/* Follow-up */
+.rx-followup {
+  font-size: 8.5pt;
+  color: #111;
+  margin-bottom: 3mm;
+  padding: 1.5mm 2mm;
+  background: #FFF8DC;
+  border-left: 2pt solid #F59E0B;
+}
+
+/* Signature block */
+.rx-signature-block {
+  margin-top: auto;
+  padding-top: 4mm;
+  text-align: right;
+  border-top: 0.5pt dashed #ccc;
+}
+
+.rx-sig-line {
+  font-size: 9pt;
+  color: #333;
+  margin-bottom: 6mm;
 }
 
 .rx-sig-name {
-    font-weight: bold;
-    font-size: 14px;
+  font-size: 12pt;
+  font-weight: 700;
+  color: #0B6E8A;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-style: italic;
 }
 
 .rx-sig-qual {
-    color: #555;
-    font-size: 12px;
+  font-size: 8.5pt;
+  color: #333;
+  font-weight: 500;
 }
 
-.rx-footer-note {
-    text-align: center;
-    font-size: 11px;
-    color: #777;
-    border-top: 1px solid #ddd;
-    padding-top: 6px;
+/* ══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.rx-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2mm;
+  padding-top: 1.5mm;
+  border-top: 0.5pt solid #999;
+  font-size: 7pt;
+  color: #555;
 }
 
-.rx-footer-note p {
-    margin: 0;
-}
-
-/* ═══════════════════════════════════════════════════════
-   @media print — hides UI chrome, shows only the slip
-   ═══════════════════════════════════════════════════════ */
-@media print {
-    /* Hide app chrome elements */
-    .app-header,
-    .bottom-bar,
-    .toast-container,
-    .dash-root,
-    .load-modal,
-    .app-main > section,
-    .app-main > div.bottom-bar {
-        display: none !important;
-    }
-
-    /* Let the print page flow naturally */
-    .app-main {
-        padding: 0 !important;
-        margin: 0 !important;
-        background: white !important;
-    }
-
-    #rx-print-page {
-        max-width: 100%;
-        margin: 0;
-        padding: 14px 20px;
-        border: none;
-        box-shadow: none;
-        border-radius: 0;
-        font-size: 12pt;
-    }
-
-    .rx-clinic-name {
-        font-size: 20pt;
-    }
-
-    .rx-clinic-name-en {
-        font-size: 14pt;
-    }
-
-    .rx-med-table th,
-    .rx-med-table td {
-        font-size: 10pt;
-        padding: 3px 5px;
-    }
-
-    .rx-block-title {
-        font-size: 11pt;
-    }
-
-    .rx-footer {
-        margin-top: 20px;
-    }
-
-    .rx-sig-space {
-        width: 180px;
-        height: 24px;
-    }
-
-    .rx-diet-chart {
-        background: #f8fafc;
-        border: 1px solid #ccc;
-        border-radius: 0;
-    }
-
-    @page {
-        margin: 12mm 10mm;
-        size: A4;
-    }
-}
+.rx-footer-note { font-style: italic; }
+.rx-footer-timing { font-weight: 600; color: #0B6E8A; }
