@@ -186,6 +186,9 @@ def create_prescription(payload: PrescriptionIn):
     except psycopg2.IntegrityError:
         conn.rollback()
         raise HTTPException(status_code=409, detail=f"Prescription '{record_id}' already exists.")
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
 
@@ -263,7 +266,6 @@ def update_prescription(prescription_id: str, payload: PrescriptionIn):
             raise HTTPException(status_code=404, detail="Prescription not found")
 
         set_clause = ", ".join(f"{c} = %s" for c in cols if c != "id")
-        # vals without record_id for SET, plus prescription_id for WHERE
         update_vals = tuple(v for c, v in zip(cols, vals) if c != "id") + (prescription_id,)
         cursor.execute(f"UPDATE prescriptions SET {set_clause} WHERE id = %s", update_vals)
         _save_medications(conn, prescription_id, payload.medications)
@@ -271,6 +273,11 @@ def update_prescription(prescription_id: str, payload: PrescriptionIn):
 
         cursor.execute("SELECT * FROM prescriptions WHERE id = %s", (prescription_id,))
         return _row_to_prescription(conn, cursor.fetchone())
+    except HTTPException:
+        raise
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
 
