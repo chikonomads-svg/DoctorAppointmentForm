@@ -1,18 +1,32 @@
 body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 
+/* ═══ SCREEN PREVIEW ═══ */
+.rx-print-view {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 0;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: auto;
+  background: #e8e8e8;
+}
+
 .rx-page {
   font-family: 'Times New Roman', Times, serif;
   font-size: 9.5pt;
   color: #000;
   background: #fff;
   width: 210mm;
+  min-height: 297mm;
   margin: 0 auto;
-  padding: 4mm 6mm;
+  padding: 5mm 6mm;
   box-sizing: border-box;
   line-height: 1.2;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   position: relative;
-  page-break-after: avoid;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* ═══ HEADER — 3 equal columns ═══ */
@@ -67,7 +81,7 @@ body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 .rx-pt-small { width: 16mm; }
 
 /* ═══ BODY ═══ */
-.rx-body { display: flex; gap: 0; border: 1pt solid #999; }
+.rx-body { display: flex; gap: 0; border: 1pt solid #999; flex: 1; }
 
 /* LEFT COLUMN */
 .rx-left-col { width: 55mm; min-width: 55mm; flex-shrink: 0; border-right: 1.5pt solid #0B6E8A; padding: 1mm 1.5mm; display: flex; flex-direction: column; gap: 0; }
@@ -100,7 +114,7 @@ body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 .rx-diet-desc { font-size: 5.5pt; color: #333; line-height: 1.2; }
 
 /* RIGHT COLUMN */
-.rx-right-col { flex: 1; padding: 1.5mm 3mm; display: flex; flex-direction: column; gap: 0; position: relative; }
+.rx-right-col { flex: 1; padding: 1.5mm 3mm; display: flex; flex-direction: column; gap: 0; position: relative; min-width: 0; overflow: hidden; }
 .rx-symbol { position: absolute; top: 1.5mm; right: 3mm; font-size: 20pt; color: #0B6E8A; font-family: 'Times New Roman', serif; font-weight: 700; line-height: 1; opacity: 0.25; }
 .rx-right-section { margin-bottom: 2mm; }
 .rx-right-label { font-size: 8.5pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1mm; text-transform: uppercase; letter-spacing: 0.2px; }
@@ -110,14 +124,26 @@ body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 .rx-complaints-content { min-height: 12mm; }
 .rx-diagnosis-content { min-height: 12mm; }
 
+/* ═══ MEDICATIONS — borderless compact list ═══ */
 .rx-rx-section { margin-bottom: 2mm; }
-.rx-med-table { width: 100%; border-collapse: collapse; font-size: 8pt; }
-.rx-med-th { background: #0B6E8A; color: #fff; font-size: 7.5pt; font-weight: 600; padding: 1mm 1.5mm; border: 0.5pt solid #0B6E8A; text-align: left; white-space: nowrap; }
-.rx-med-td { border: 0.5pt solid #ccc; padding: 1mm 1.5mm; font-size: 8pt; vertical-align: top; }
-.rx-med-row-even td { background: #F0F7FA; }
-.rx-med-sno { width: 5mm; text-align: center; }
-.rx-med-drug { min-width: 28mm; }
-.rx-med-instr { min-width: 16mm; }
+.rx-rx-title { font-size: 8.5pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1mm; text-transform: uppercase; letter-spacing: 0.2px; }
+.rx-med-list { display: flex; flex-direction: column; gap: 0.5mm; }
+.rx-med-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1mm;
+  font-size: 8pt;
+  line-height: 1.3;
+  padding: 0.4mm 0;
+  border-bottom: 0.3pt dotted #ccc;
+}
+.rx-med-item:last-child { border-bottom: none; }
+.rx-med-sno { font-weight: 700; color: #0B6E8A; min-width: 4mm; flex-shrink: 0; }
+.rx-med-name { font-weight: 700; color: #111; flex-shrink: 0; }
+.rx-med-details { color: #333; flex: 1; min-width: 0; }
+.rx-med-dose { font-weight: 600; }
+.rx-med-sep { color: #999; margin: 0 0.3mm; }
+.rx-med-instr { font-style: italic; color: #555; flex-shrink: 0; }
 
 .rx-advice-section { margin-bottom: 2mm; }
 .rx-advice-label { font-size: 8pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1mm; text-transform: uppercase; }
@@ -134,26 +160,66 @@ body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 .rx-footer-note { font-style: italic; }
 .rx-footer-timing { font-weight: 600; color: #0B6E8A; }
 
-/* ═══ PRINT - Force single A4 portrait page ═══ */
+/* ═══ PAGE RULE - A4 Portrait ═══ */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+/* ═══ PRINT - Force full A4 page ═══ */
 @media print {
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  body { margin: 0; padding: 0; background: white; }
-
-  /* Hide everything except the rx-page */
-  #root > *:not([class*="rx-page"]) { display: none !important; }
-  .no-print { display: none !important; }
-
-  .rx-page {
-    box-shadow: none;
-    width: 210mm;
-    height: 297mm;
-    margin: 0;
-    padding: 5mm 6mm;
-    box-sizing: border-box;
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  @page {
-    size: A4 portrait;
-    margin: 0;
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    overflow: hidden !important;
+    width: 210mm !important;
+    height: 297mm !important;
+  }
+
+  .no-print { display: none !important; }
+
+  /* Hide AppShell sidebar/topbar during print */
+  .app-bar, .side-nav, .side-overlay, .bottom-nav, .main-content {
+    display: none !important;
+  }
+
+  .rx-print-view {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    min-height: auto !important;
+    width: 210mm !important;
+    overflow: visible !important;
+  }
+
+  .rx-page {
+    box-shadow: none !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 5mm 6mm !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    transform: none !important;
+    position: relative !important;
+    display: block !important;
+  }
+
+  .rx-body {
+    flex: 1 !important;
+    page-break-inside: avoid !important;
+  }
+
+  .rx-signature-block {
+    margin-top: auto !important;
   }
 }

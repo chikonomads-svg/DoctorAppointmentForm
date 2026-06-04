@@ -144,5 +144,7 @@ body {
 /* ── Print ── */
 @media print {
   .no-print { display: none !important; }
-  body { background: white !important; }
+  body { background: white !important; overflow: visible !important; }
+  #root { min-height: auto !important; }
+  #root > *:not(.rx-print-view):not(script):not(style) { display: none !important; }
 }

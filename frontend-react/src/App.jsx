@@ -284,7 +284,7 @@ export default function App() {
       case 'patients': return <PatientDirectory onEnterForm={handleEnterForm} />;
       case 'settings': return <Settings />;
       case 'profile': return <UserProfile user={user} />;
-      case 'print': return (<div><div style={{display:'flex',gap:'var(--space-base)',marginBottom:'var(--space-md)',padding:'var(--space-sm) var(--space-lg)',background:'var(--surface-container-lowest)',borderBottom:'1px solid var(--outline-variant)',position:'sticky',top:0,zIndex:100}}><button className="btn btn-ghost" onClick={()=>setView('form')}><span className="material-symbols-outlined" style={{fontSize:18}}>edit</span> Back</button><button className="btn btn-primary" onClick={()=>window.print()}><span className="material-symbols-outlined" style={{fontSize:18}}>print</span> Print</button></div><PrescriptionPrint data={data}/></div>);
+      case 'print': return (<div className="rx-print-view"><div className="no-print" style={{display:'flex',gap:'var(--space-base)',marginBottom:'var(--space-md)',padding:'var(--space-sm) var(--space-lg)',background:'var(--surface-container-lowest)',borderBottom:'1px solid var(--outline-variant)',position:'sticky',top:0,zIndex:100}}><button className="btn btn-ghost" onClick={()=>setView('form')}><span className="material-symbols-outlined" style={{fontSize:18}}>edit</span> Back</button><button className="btn btn-primary" onClick={()=>window.print()}><span className="material-symbols-outlined" style={{fontSize:18}}>print</span> Print</button></div><PrescriptionPrint data={data}/></div>);
       case 'form': default: return renderForm();
     }
   };
