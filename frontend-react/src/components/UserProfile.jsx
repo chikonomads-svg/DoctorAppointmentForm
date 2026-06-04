@@ -22,7 +22,7 @@ export default function UserProfile({ user = {} }) {
         <h1 className="profile-name">{user?.name || 'Dr. Deepak Kumar'}</h1>
         <p className="profile-qual">{user?.qualification || 'MBBS (SKMCH), MD General Medicine (DMCH Darbhanga)'}</p>
         <div className="profile-tags">
-          <span className="profile-tag profile-tag-primary">Reg No: {user?.regNo || 'BR/12345'}</span>
+          <span className="profile-tag profile-tag-primary">Reg No: {user?.regNo || 'BCMR50223'}</span>
           <span className="profile-tag profile-tag-secondary">Muzaffarpur, Bihar</span>
         </div>
         <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-md)', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -54,7 +54,7 @@ export default function UserProfile({ user = {} }) {
             <div className="profile-detail-item">
               <div>
                 <p className="profile-detail-label">Phone</p>
-                <p className="profile-detail-value">{user?.phone || '+91 9999438183'}</p>
+                <p className="profile-detail-value">{user?.phone || '+91 9199943818'}</p>
               </div>
               <span className="profile-detail-icon material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>call</span>
             </div>
@@ -167,7 +167,7 @@ export default function UserProfile({ user = {} }) {
         <div>
           <h4 style={{ fontSize: 14, fontWeight: 600, color: 'var(--primary)', marginBottom: 4 }}>Contact</h4>
           <p style={{ fontSize: 14, color: 'var(--on-surface)' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: 16, verticalAlign: 'text-bottom' }}>call</span> {user?.phone || '+91 9999438183'}
+            <span className="material-symbols-outlined" style={{ fontSize: 16, verticalAlign: 'text-bottom' }}>call</span> {user?.phone || '+91 9199943818'}
           </p>
           <p style={{ fontSize: 14, color: 'var(--on-surface)' }}>
             <span className="material-symbols-outlined" style={{ fontSize: 16, verticalAlign: 'text-bottom' }}>mail</span> {user?.email || 'deepakkumar21121995@gmail.com'}
@@ -175,7 +175,7 @@ export default function UserProfile({ user = {} }) {
         </div>
         <div style={{ textAlign: 'right' }}>
           <p style={{ fontSize: 12, color: 'var(--on-surface-variant)' }}>Registration No</p>
-          <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--on-surface)', fontFamily: 'var(--font-mono)' }}>{user?.regNo || 'BR/12345'}</p>
+          <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--on-surface)', fontFamily: 'var(--font-mono)' }}>{user?.regNo || 'BCMR50223'}</p>
         </div>
       </div>
     </div>

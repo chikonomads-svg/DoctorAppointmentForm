@@ -225,10 +225,10 @@ const DOCTOR_INFO = {
   id: 'dr-deepak-kumar',
   name: 'Dr. Deepak Kumar',
   email: 'deepakkumar21121995@gmail.com',
-  phone: '+91 9999438183',
+  phone: '+91 9199943818',
   role: 'doctor',
   qualification: 'MBBS (SKMCH), MD General Medicine (DMCH Darbhanga)',
-  regNo: 'BR/12345',
+  regNo: 'BCMR50223',
   education: 'MBBS (SKMCH, Muzaffarpur), MD General Medicine (DMCH Darbhanga)',
   college1: 'SKMCH - Sri Krishna Medical College & Hospital, Muzaffarpur',
   college2: 'DMCH - Darbhanga Medical College & Hospital',
@@ -295,10 +295,10 @@ export default function App() {
         <div className="rx-clinic-header">
           <div className="rx-clinic-brand"><h1 className="rx-clinic-hindi">आरोग्य क्लिनिक</h1><div className="rx-clinic-divider"/><h1 className="rx-clinic-en">Arogya Clinic</h1></div>
           <p className="rx-clinic-doctor">Dr. Deepak Kumar</p>
-          <p className="rx-clinic-qual">MBBS, MD (General Medicine) | Reg No: BR/12345</p>
+          <p className="rx-clinic-qual">MBBS (SKMCH), MD General Medicine (DMCH Darbhanga) | Reg No: BCMR50223</p>
           <div className="rx-clinic-contact-row">
-            <span><span className="material-symbols-outlined" style={{fontSize:12,verticalAlign:'middle'}}>location_on</span> Saktidharamkata, Muzaffarpur, Bihar</span>
-            <span><span className="material-symbols-outlined" style={{fontSize:12,verticalAlign:'middle'}}>call</span> +91 9999438183</span>
+            <span><span className="material-symbols-outlined" style={{fontSize:12,verticalAlign:'middle'}}>location_on</span> Saktidharamkata Bada Jagganath, near God Father Public School, 842004</span>
+            <span><span className="material-symbols-outlined" style={{fontSize:12,verticalAlign:'middle'}}>call</span> +91 9199943818</span>
           </div>
         </div>
         <div style={{padding:'var(--space-lg)'}}>
@@ -349,7 +349,7 @@ export default function App() {
             <div><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'var(--space-md)'}}><h3 style={{fontSize:12,fontWeight:600,color:'var(--primary)',display:'flex',alignItems:'center',gap:'var(--space-base)',textTransform:'uppercase',letterSpacing:'0.5px'}}><span className="material-symbols-outlined" style={{fontSize:18}}>lightbulb</span> ADVICE & REMARKS</h3>
               <div className="chip-row" style={{marginBottom:0}}>{ADVICE_PRESETS.map(p=>(<button key={p.label} className="chip chip-advice" onClick={()=>update({advice:data.advice?data.advice+'\n'+p.text:p.text})} type="button">{p.label}</button>))}</div></div>
               <textarea rows={4} placeholder="General instructions..." value={data.advice||''} onChange={e=>update({advice:e.target.value})}/></div>
-            <div className="rx-signature-box"><div className="rx-sig-line"/><p className="rx-sig-label">Dr. Deepak Kumar</p><p className="rx-sig-sub">MBBS, MD (General Medicine) | Reg: BR/12345</p></div>
+            <div className="rx-signature-box"><div className="rx-sig-line"/><p className="rx-sig-label">Dr. Deepak Kumar</p><p className="rx-sig-sub">MBBS (SKMCH), MD General Medicine (DMCH Darbhanga) | Reg: BCMR50223</p></div>
           </div>
         </div>
         <div className="rx-disclaimer"><p>Not for Medico-Legal Purposes • Valid for 7 Days</p></div>

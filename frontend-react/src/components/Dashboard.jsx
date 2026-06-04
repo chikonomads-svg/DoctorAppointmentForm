@@ -50,7 +50,7 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
         <p>{user?.name || 'Dr. Deepak Kumar'} — Your Trusted Healthcare Partner. We provide guideline-directed comprehensive care for Diabetes, Blood Pressure, Thyroid, Asthma, COPD, and Abdominal diseases, prioritizing your long-term wellness.</p>
         <div className="dash-welcome-meta">
           <span><span className="material-symbols-outlined" style={{fontSize:16,verticalAlign:'text-bottom'}}>location_on</span> Muzaffarpur, Bihar</span>
-          <span><span className="material-symbols-outlined" style={{fontSize:16,verticalAlign:'text-bottom'}}>call</span> +91 9999438183</span>
+          <span><span className="material-symbols-outlined" style={{fontSize:16,verticalAlign:'text-bottom'}}>call</span> +91 9199943818</span>
         </div>
       </div>
 

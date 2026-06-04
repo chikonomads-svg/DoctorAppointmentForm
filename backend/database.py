@@ -67,6 +67,8 @@ def init_db() -> None:
             patient_sex     VARCHAR(50),
             patient_weight  REAL,
             patient_address TEXT,
+            patient_uhid    VARCHAR(255),
+            follow_up       TEXT,
             cb_diabetes     INTEGER DEFAULT 0,
             cb_hypertension INTEGER DEFAULT 0,
             cb_copd         INTEGER DEFAULT 0,
@@ -103,6 +105,9 @@ def init_db() -> None:
 
     # ── All new columns (safe to run multiple times) ──────────────────────────
     new_cols = [
+        # Patient extras
+        ("patient_uhid",  "VARCHAR(255)"),
+        ("follow_up",     "TEXT"),
         # CVS
         ("cvs_normal",           "INTEGER DEFAULT 0"),
         ("cvs_s1s2",             "VARCHAR(100)"),
@@ -195,9 +200,11 @@ def init_db() -> None:
             dose            VARCHAR(255),
             route           VARCHAR(255),
             frequency       VARCHAR(255),
-            duration        VARCHAR(255)
+            duration        VARCHAR(255),
+            instructions    TEXT
         )
     """)
+    cursor.execute("ALTER TABLE medications ADD COLUMN IF NOT EXISTS instructions TEXT")
     cursor.execute("""
         CREATE INDEX IF NOT EXISTS idx_medications_prescription_id
         ON medications(prescription_id)

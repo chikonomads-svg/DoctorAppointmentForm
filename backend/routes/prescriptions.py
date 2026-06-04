@@ -26,6 +26,14 @@ def _generate_id() -> str:
     return f"{ts}-{suffix}"
 
 
+def _num(v):
+    """Return None for empty/blank strings, otherwise the value as-is (DB handles casting)."""
+    if v is None:
+        return None
+    s = str(v).strip()
+    return None if s == "" else s
+
+
 def _row_to_prescription(conn, row) -> dict:
     data = dict(row)
     cursor = conn.cursor()
@@ -44,11 +52,11 @@ def _save_medications(conn, prescription_id: str, medications: list) -> None:
         cur.execute(
             """
             INSERT INTO medications
-                (prescription_id, row_order, drug_name, dose, route, frequency, duration)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+                (prescription_id, row_order, drug_name, dose, route, frequency, duration, instructions)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (prescription_id, i, med.drug_name or "", med.dose or "",
-             med.route or "", med.frequency or "", med.duration or ""),
+             med.route or "", med.frequency or "", med.duration or "", med.instructions or ""),
         )
 
 
@@ -58,7 +66,7 @@ def _upsert_cols_and_values(p: PrescriptionIn, saved_at: str, record_id: str):
         "id", "saved_at",
         "clinic_address", "clinic_phone", "reg_no",
         "patient_date", "patient_name", "patient_age", "patient_sex",
-        "patient_weight", "patient_address",
+        "patient_weight", "patient_address", "patient_uhid", "follow_up",
         # comorbidity flags
         "cb_diabetes", "cb_hypertension", "cb_copd", "cb_tb",
         "cb_thyroid", "cb_cad", "cb_ckd", "cb_stroke",
@@ -114,12 +122,12 @@ def _upsert_cols_and_values(p: PrescriptionIn, saved_at: str, record_id: str):
     vals = (
         record_id, saved_at,
         p.clinic_address, p.clinic_phone, p.reg_no,
-        p.patient_date, p.patient_name, p.patient_age, p.patient_sex,
-        p.patient_weight, p.patient_address,
+        p.patient_date, p.patient_name, _num(p.patient_age), p.patient_sex,
+        _num(p.patient_weight), p.patient_address, p.patient_uhid, p.follow_up,
         int(p.cb_diabetes), int(p.cb_hypertension), int(p.cb_copd), int(p.cb_tb),
         int(p.cb_thyroid), int(p.cb_cad), int(p.cb_ckd), int(p.cb_stroke),
         p.dm_duration, p.dm_treatment, p.dm_drugs,
-        p.dm_fbs, p.dm_ppbs, p.dm_hba1c,
+        _num(p.dm_fbs), _num(p.dm_ppbs), p.dm_hba1c,
         int(p.dm_neuropathy), int(p.dm_retinopathy), int(p.dm_nephropathy),
         int(p.dm_cad), int(p.dm_foot),
         p.dm_notes,

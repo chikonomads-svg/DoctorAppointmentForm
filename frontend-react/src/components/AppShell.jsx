@@ -78,7 +78,7 @@ export default function AppShell({
           </div>
           <div>
             <p className="side-nav-doctor-name">{user?.name || 'Dr. Deepak Kumar'}</p>
-            <p className="side-nav-doctor-reg">MBBS, MD (General Medicine) | Reg: BR/12345</p>
+            <p className="side-nav-doctor-reg">MBBS (SKMCH), MD General Medicine (DMCH Darbhanga) | Reg: BCMR50223</p>
           </div>
         </div>
 

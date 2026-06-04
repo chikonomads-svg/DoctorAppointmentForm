@@ -6,8 +6,8 @@ export default function PrescriptionPrint({ data = {} }) {
     patient_name = '', patient_age = '', patient_sex = '',
     patient_weight = '', patient_address = '', patient_date = '',
     follow_up = '',
-    clinic_address = 'बड़ा जगनाथ, शक्ति धर्मकांटा, अहियापुर, मुजफ्फरपुर',
-    clinic_phone = '8877556142',
+    clinic_address = 'सक्तिधर्मकांटा बड़ा जगनाथ, गॉड फादर पब्लिक स्कूल के पास, मुजफ्फरपुर',
+    clinic_phone = '9199943818',
     reg_no = 'BCMR50223',
     vital_bp = '', vital_pulse = '', vital_spo2 = '',
     vital_temp = '', vital_rr = '', vital_grbs = '',
@@ -53,7 +53,7 @@ export default function PrescriptionPrint({ data = {} }) {
 
         <div className="rx-header-center">
           <div className="rx-hindi-title">आरोग्य क्लिनिक</div>
-          <div className="rx-hindi-address">बड़ा जगनाथ, शक्ति धर्मकांटा, अहियापुर, मुजफ्फरपुर, 842001</div>
+          <div className="rx-hindi-address">सक्तिधर्मकांटा बड़ा जगनाथ, गॉड फादर पब्लिक स्कूल के पास, मुजफ्फरपुर, 842004</div>
         </div>
 
         <div className="rx-header-right">
@@ -79,8 +79,8 @@ export default function PrescriptionPrint({ data = {} }) {
             </div>
           </div>
           <div className="rx-doctor-block">
-            <div className="rx-dr-name-en">Dr. DEEPAK KUMAR <span className="rx-dr-quals">MBBS, MD. (General Medicine)</span></div>
-            <div className="rx-dr-name-hi">डॉ॰ दीपक कुमार <span className="rx-dr-quals-hi">एम॰बी॰बी॰एस॰, एम॰डी॰ (जेनरल मेडिसीन)</span></div>
+            <div className="rx-dr-name-en">Dr. DEEPAK KUMAR <span className="rx-dr-quals">MBBS (SKMCH), MD General Medicine (DMCH Darbhanga)</span></div>
+            <div className="rx-dr-name-hi">डॉ॰ दीपक कुमार <span className="rx-dr-quals-hi">एम॰बी॰बी॰एस॰ (एस॰के॰एम॰सी॰एच॰), एम॰डी॰ जेनरल मेडिसीन (डी॰एम्॰सी॰एच॰ दरभंगा)</span></div>
             <div className="rx-dr-designation">Consultant Physician &nbsp;<span className="rx-reg">Reg.No:- {reg_no}</span></div>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function PrescriptionPrint({ data = {} }) {
         <span><strong>Clinic Address:</strong> {clinic_address}</span>
         <span><strong>Mobile No.:-</strong> {clinic_phone}</span>
         <span><strong>Validity:-</strong> 21 Days</span>
-        <span><strong>06 AM–09 AM & 03 PM–06 PM</strong></span>
+        <span><strong>Morning: 6 AM–9 AM | Evening: 3 PM–6 PM</strong></span>
       </div>
 
       {/* PATIENT TABLE */}
@@ -266,7 +266,7 @@ export default function PrescriptionPrint({ data = {} }) {
           <div className="rx-signature-block">
             <div className="rx-sig-line">Signature: _______________</div>
             <div className="rx-sig-name">Dr. Deepak Kumar</div>
-            <div className="rx-sig-qual">MD (General Medicine)</div>
+            <div className="rx-sig-qual">MBBS (SKMCH), MD General Medicine (DMCH Darbhanga)</div>
           </div>
 
         </div>{/* end right col */}
@@ -275,7 +275,7 @@ export default function PrescriptionPrint({ data = {} }) {
       {/* FOOTER */}
       <div className="rx-footer">
         <div className="rx-footer-note">This is a computer-generated prescription. Valid for 21 days from the date of issue.</div>
-        <div className="rx-footer-timing">OPD Timings: 06 AM–09 AM & 03 PM–06 PM</div>
+        <div className="rx-footer-timing">Morning: 6 AM–9 AM | Evening: 3 PM–6 PM</div>
       </div>
 
     </div>

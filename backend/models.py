@@ -12,11 +12,12 @@ from pydantic import BaseModel, Field
 # ── Medication row ────────────────────────────────────────────────────────────
 
 class MedicationIn(BaseModel):
-    drug_name: Optional[str] = ""
-    dose:      Optional[str] = ""
-    route:     Optional[str] = ""
-    frequency: Optional[str] = ""
-    duration:  Optional[str] = ""
+    drug_name:    Optional[str] = ""
+    dose:         Optional[str] = ""
+    route:        Optional[str] = ""
+    frequency:    Optional[str] = ""
+    duration:     Optional[str] = ""
+    instructions: Optional[str] = ""
 
 
 class MedicationOut(MedicationIn):
@@ -38,10 +39,12 @@ class PrescriptionIn(BaseModel):
     # Patient
     patient_date:    Optional[str] = ""
     patient_name:    str = Field(..., min_length=1)
-    patient_age:     Optional[int] = None
+    patient_age:     Optional[str] = ""
     patient_sex:     Optional[str] = ""
-    patient_weight:  Optional[float] = None
+    patient_weight:  Optional[str] = ""
     patient_address: Optional[str] = ""
+    patient_uhid:    Optional[str] = ""
+    follow_up:       Optional[str] = ""
 
     # ── Comorbidity flags ─────────────────────────────────────────────────────
     cb_diabetes:     bool = False
@@ -57,8 +60,8 @@ class PrescriptionIn(BaseModel):
     dm_duration:    Optional[str]   = ""
     dm_treatment:   Optional[str]   = ""
     dm_drugs:       Optional[str]   = ""
-    dm_fbs:         Optional[float] = None
-    dm_ppbs:        Optional[float] = None
+    dm_fbs:         Optional[str] = ""
+    dm_ppbs:        Optional[str] = ""
     dm_hba1c:       Optional[str]   = ""
     dm_neuropathy:  bool = False
     dm_retinopathy: bool = False

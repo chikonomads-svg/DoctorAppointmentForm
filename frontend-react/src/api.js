@@ -53,7 +53,15 @@ export async function savePrescription(data) {
     }
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `Server error: ${res.status}`);
+        let msg = `Server error: ${res.status}`;
+        if (err.detail) {
+            if (Array.isArray(err.detail)) {
+                msg = err.detail.map(e => e.msg || JSON.stringify(e)).join('; ');
+            } else {
+                msg = err.detail;
+            }
+        }
+        throw new Error(msg);
     }
     return res.json();
 }
