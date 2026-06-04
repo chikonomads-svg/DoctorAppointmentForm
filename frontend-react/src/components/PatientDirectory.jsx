@@ -1,32 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-/**
- * PatientDirectory — Arogya Clinic Patient Directory View
- * Design from Figma: stitches_arogya_clinic_rx_manager/patients_directory
- */
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export default function PatientDirectory({ onEnterForm }) {
+  const [patients, setPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [genderFilter, setGenderFilter] = useState('all');
   const [ageFilter, setAgeFilter] = useState('all');
 
-  const patients = [
-    { id: 'P-24091', name: 'Rajesh Sharma', age: 42, sex: 'Male', blood: 'O+', phone: '+91 98765 43210', email: 'rajesh.s@example.com', lastVisit: 'Oct 12, 2023', prescriptions: 14 },
-    { id: 'P-24092', name: 'Anita Desai', age: 35, sex: 'Female', blood: 'A-', phone: '+91 98221 00456', email: 'anita.d@email.com', lastVisit: 'Nov 04, 2023', prescriptions: 8 },
-    { id: 'P-24095', name: 'Vikram Mehra', age: 58, sex: 'Male', blood: 'B+', phone: '+91 91234 56789', email: 'v.mehra@web.com', lastVisit: 'Yesterday', prescriptions: 21 },
-    { id: 'P-24102', name: 'Sunita Patil', age: 29, sex: 'Female', blood: 'O-', phone: '+91 99887 76655', email: 'spatil@provider.in', lastVisit: 'Oct 28, 2023', prescriptions: 3 },
-    { id: 'P-24115', name: 'Arjun Singh', age: 64, sex: 'Male', blood: 'AB+', phone: '+91 90000 12345', email: 'singh.arjun@care.com', lastVisit: 'Nov 01, 2023', prescriptions: 32 },
-  ];
+  useEffect(() => {
+    setLoading(true);
+    setError('');
+    fetch(`${API}/api/prescriptions`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch patients');
+        return res.json();
+      })
+      .then(data => {
+        // data might be an array or have a data field
+        const list = Array.isArray(data) ? data : (data?.data || data?.prescriptions || []);
+        setPatients(list);
+        setLoading(false);
+      })
+      .catch(e => {
+        setError(e.message);
+        setLoading(false);
+      });
+  }, []);
 
-  const filtered = patients.filter(p => {
-    const matchesSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.id.toLowerCase().includes(search.toLowerCase());
-    const matchesGender = genderFilter === 'all' || p.sex.toLowerCase() === genderFilter;
-    const matchesAge = ageFilter === 'all' ||
-      (ageFilter === '0-18' && p.age <= 18) ||
-      (ageFilter === '19-45' && p.age >= 19 && p.age <= 45) ||
-      (ageFilter === '46-60' && p.age >= 46 && p.age <= 60) ||
-      (ageFilter === '60+' && p.age >= 61);
-    return matchesSearch && matchesGender && matchesAge;
-  });
+  let filtered = patients;
+  if (search) {
+    const q = search.toLowerCase();
+    filtered = filtered.filter(p =>
+      (p.patient_name || '').toLowerCase().includes(q) ||
+      (p.id || '').toLowerCase().includes(q)
+    );
+  }
+  if (genderFilter !== 'all') {
+    filtered = filtered.filter(p => (p.patient_sex || '').toLowerCase() === genderFilter);
+  }
+  if (ageFilter !== 'all') {
+    filtered = filtered.filter(p => {
+      const age = parseInt(p.patient_age, 10);
+      if (isNaN(age)) return false;
+      if (ageFilter === '0-18') return age <= 18;
+      if (ageFilter === '19-45') return age >= 19 && age <= 45;
+      if (ageFilter === '46-60') return age >= 46 && age <= 60;
+      if (ageFilter === '60+') return age >= 61;
+      return true;
+    });
+  }
+
+  const formatDate = (d) => {
+    if (!d) return '—';
+    try { return new Date(d).toLocaleDateString('en-IN'); } catch { return d; }
+  };
 
   return (
     <>
@@ -68,64 +98,66 @@ export default function PatientDirectory({ onEnterForm }) {
 
       {/* ── Patients Table ── */}
       <div className="pd-table-container">
-        <div className="pd-table-wrap">
-          <table className="pd-table">
-            <thead>
-              <tr>
-                <th>Patient ID</th>
-                <th>Name & Gender</th>
-                <th>Contact</th>
-                <th>Last Visit</th>
-                <th>Prescriptions</th>
-                <th style={{ textAlign: 'right' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--on-surface-variant)' }}>
-                    No patients found matching your criteria.
-                  </td>
-                </tr>
-              ) : filtered.map((p, i) => (
-                <tr key={p.id}>
-                  <td><span className="pd-id">{p.id}</span></td>
-                  <td>
-                    <div className="pd-name-cell">
-                      <span className="pd-name">{p.name}</span>
-                      <span className={`pd-badge pd-badge-${p.sex.toLowerCase()}`}>{p.sex}</span>
-                    </div>
-                    <div className="pd-meta">{p.age} Years • Blood Type: {p.blood}</div>
-                  </td>
-                  <td>
-                    <div className="pd-contact">{p.phone}</div>
-                    <div className="pd-contact-email">{p.email}</div>
-                  </td>
-                  <td style={{ fontSize: '14px', color: 'var(--on-surface)' }}>{p.lastVisit}</td>
-                  <td>
-                    <span className="pd-count-badge">{p.prescriptions} Total</span>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <button className="pd-open-btn" onClick={() => onEnterForm(p.id)}>
-                      Open History
-                      <span className="material-symbols-outlined">keyboard_arrow_right</span>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="pd-pagination">
-          <span>Showing {filtered.length} of {patients.length} patients</span>
-          <div className="pd-pagination-actions">
-            <button><span className="material-symbols-outlined" style={{ fontSize: '18px' }}>chevron_left</span></button>
-            <button className="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button><span className="material-symbols-outlined" style={{ fontSize: '18px' }}>chevron_right</span></button>
+        {loading && (
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--on-surface-variant)' }}>
+            <div style={{ width: 24, height: 24, border: '3px solid var(--primary-fixed)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.6s linear infinite', margin: '0 auto 8px' }}></div>
+            <span>Loading patients...</span>
           </div>
-        </div>
+        )}
+        {error && (
+          <div style={{ padding: '12px 16px', background: '#fee2e2', color: '#991b1b', margin: '8px', borderRadius: 'var(--radius)' }}>
+            ⚠️ {error}
+          </div>
+        )}
+        {!loading && !error && (
+          <>
+            <div className="pd-table-wrap">
+              <table className="pd-table">
+                <thead>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Name & Gender</th>
+                    <th>Age</th>
+                    <th>Diagnosis</th>
+                    <th>Last Visit</th>
+                    <th style={{ textAlign: 'right' }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--on-surface-variant)' }}>
+                        No patients found matching your criteria.
+                      </td>
+                    </tr>
+                  ) : filtered.map((p, i) => (
+                    <tr key={p.id || i}>
+                      <td><span className="pd-id">{(p.id || '').slice(-8)}</span></td>
+                      <td>
+                        <div className="pd-name-cell">
+                          <span className="pd-name">{p.patient_name || '—'}</span>
+                          <span className={`pd-badge pd-badge-${(p.patient_sex || '').toLowerCase()}`}>{p.patient_sex || '—'}</span>
+                        </div>
+                      </td>
+                      <td>{p.patient_age ? `${p.patient_age} yrs` : '—'}</td>
+                      <td><span className="dash-diag-text">{(p.provisional_diagnosis || '').slice(0, 40) || '—'}</span></td>
+                      <td style={{ fontSize: '14px', color: 'var(--on-surface)' }}>{formatDate(p.saved_at)}</td>
+                      <td style={{ textAlign: 'right' }}>
+                        <button className="pd-open-btn" onClick={() => onEnterForm(p.id)}>
+                          Open History
+                          <span className="material-symbols-outlined">keyboard_arrow_right</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="pd-pagination">
+              <span>Showing {filtered.length} of {patients.length} patients</span>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

@@ -2,16 +2,17 @@ body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 
 .rx-page {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 10pt;
+  font-size: 9.5pt;
   color: #000;
   background: #fff;
   width: 210mm;
-  min-height: 297mm;
   margin: 0 auto;
-  padding: 8mm 8mm 6mm 8mm;
+  padding: 4mm 6mm;
   box-sizing: border-box;
-  line-height: 1.35;
+  line-height: 1.2;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  position: relative;
+  page-break-after: avoid;
 }
 
 /* ═══ HEADER — 3 equal columns ═══ */
@@ -59,85 +60,100 @@ body { margin: 0; background: #e8e8e8; font-family: 'Times New Roman', serif; }
 /* ═══ PATIENT TABLE ═══ */
 .rx-patient-table { width: 100%; border-collapse: collapse; border: 1.5pt solid #0B6E8A; margin-bottom: 2mm; table-layout: fixed; }
 .rx-patient-table tr:first-child td { background-color: #E8F4F8; }
-.rx-pt-cell { border: 1pt solid #0B6E8A; padding: 0.4mm 2mm; font-size: 9pt; vertical-align: middle; line-height: 1.4; white-space: nowrap; overflow: hidden; }
+.rx-pt-cell { border: 1pt solid #0B6E8A; padding: 0.4mm 2mm; font-size: 9pt; vertical-align: middle; line-height: 1.4; overflow: hidden; }
+.rx-pt-cell:not(.rx-pt-label-cell) { white-space: normal; word-break: break-word; }
 .rx-pt-label-cell { background-color: #D0E8F0; font-weight: 700; font-size: 8pt; white-space: nowrap; }
-.rx-pt-date { width: 22mm; }
+.rx-pt-date { width: 22mm; white-space: nowrap; }
 .rx-pt-small { width: 16mm; }
 
 /* ═══ BODY ═══ */
-.rx-body { display: flex; gap: 0; border: 1pt solid #999; min-height: 155mm; }
+.rx-body { display: flex; gap: 0; border: 1pt solid #999; }
 
 /* LEFT COLUMN */
-.rx-left-col { width: 62mm; min-width: 62mm; flex-shrink: 0; border-right: 1.5pt solid #0B6E8A; padding: 2mm 2.5mm; display: flex; flex-direction: column; gap: 0; }
-.rx-section { border-bottom: 0.5pt solid #ccc; padding-bottom: 2mm; margin-bottom: 2mm; }
+.rx-left-col { width: 55mm; min-width: 55mm; flex-shrink: 0; border-right: 1.5pt solid #0B6E8A; padding: 1mm 1.5mm; display: flex; flex-direction: column; gap: 0; }
+.rx-section { border-bottom: 0.5pt solid #ccc; padding-bottom: 1mm; margin-bottom: 1mm; }
 .rx-section:last-child { border-bottom: none; margin-bottom: 0; }
-.rx-section-title { font-size: 8.5pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1.5mm; text-transform: uppercase; letter-spacing: 0.3px; }
-.rx-field-row { display: flex; align-items: baseline; margin-bottom: 1mm; font-size: 8.5pt; }
-.rx-field-label { font-weight: 600; min-width: 20mm; flex-shrink: 0; color: #222; }
-.rx-field-line { flex: 1; border-bottom: 0.5pt solid #888; min-height: 4mm; padding-left: 1mm; font-size: 8.5pt; }
-.rx-checkbox-row { display: flex; align-items: center; gap: 1.5mm; font-size: 8.5pt; margin-bottom: 1mm; color: #111; }
-.rx-cb { font-size: 10pt; line-height: 1; min-width: 4mm; }
+.rx-section-title { font-size: 7.5pt; font-weight: 700; color: #0B6E8A; margin-bottom: 0.5mm; text-transform: uppercase; letter-spacing: 0.3px; }
+.rx-field-row { display: flex; align-items: baseline; margin-bottom: 0.3mm; font-size: 7.5pt; }
+.rx-field-label { font-weight: 600; min-width: 16mm; flex-shrink: 0; color: #222; }
+.rx-field-line { flex: 1; border-bottom: 0.5pt solid #888; min-height: 2.5mm; padding-left: 0.5mm; font-size: 7.5pt; }
+.rx-checkbox-row { display: flex; align-items: center; gap: 1mm; font-size: 7.5pt; margin-bottom: 0.3mm; color: #111; }
+.rx-cb { font-size: 8pt; line-height: 1; min-width: 3mm; }
 .rx-cb-checked { color: #0B6E8A; font-weight: 700; }
-.rx-investigations-text { font-size: 8pt; min-height: 8mm; white-space: pre-wrap; color: #111; }
+.rx-investigations-text { font-size: 7pt; white-space: pre-wrap; color: #111; line-height: 1.2; }
 
-/* ═══ DIET ROUTINE — card style ═══ */
-.rx-diet-chart { margin-top: auto; padding-top: 2.5mm; border-top: 1pt solid #0B6E8A; }
-.rx-diet-title { font-size: 8pt; font-weight: 700; color: #0B6E8A; text-transform: uppercase; margin-bottom: 2mm; letter-spacing: 0.5px; text-align: center; }
-.rx-diet-row { display: flex; flex-direction: column; gap: 2mm; }
+/* ═══ DIET ROUTINE — compact ═══ */
+.rx-diet-chart { margin-top: auto; padding-top: 1mm; border-top: 0.5pt solid #0B6E8A; }
+.rx-diet-title { font-size: 7pt; font-weight: 700; color: #0B6E8A; text-transform: uppercase; margin-bottom: 0.5mm; letter-spacing: 0.3px; }
+.rx-diet-row { display: flex; flex-direction: column; gap: 0.5mm; }
 .rx-diet-item {
-  display: grid;
-  grid-template-columns: 10mm 1fr;
-  grid-template-rows: auto auto;
-  gap: 0 1.5mm;
+  display: flex;
+  gap: 0.5mm;
+  align-items: flex-start;
   background: #F0F7FA;
-  border-left: 2pt solid #0B6E8A;
-  border-radius: 1mm;
-  padding: 1.5mm 2mm;
+  padding: 0.5mm 1mm;
+  border-left: 1.5pt solid #0B6E8A;
+  border-radius: 0.5mm;
 }
-.rx-diet-icon { grid-row: 1 / 3; grid-column: 1; font-size: 14pt; display: flex; align-items: center; justify-content: center; }
-.rx-diet-label { grid-row: 1; grid-column: 2; font-size: 7.5pt; font-weight: 700; color: #0B6E8A; line-height: 1.3; }
-.rx-diet-desc { grid-row: 2; grid-column: 2; font-size: 6.5pt; color: #333; line-height: 1.4; }
+.rx-diet-icon { font-size: 10pt; flex-shrink: 0; margin-right: 0.5mm; }
+.rx-diet-label { font-size: 6.5pt; font-weight: 700; color: #0B6E8A; white-space: nowrap; margin-right: 0.5mm; }
+.rx-diet-desc { font-size: 5.5pt; color: #333; line-height: 1.2; }
 
 /* RIGHT COLUMN */
-.rx-right-col { flex: 1; padding: 2mm 3mm; display: flex; flex-direction: column; gap: 0; position: relative; }
-.rx-symbol { position: absolute; top: 2mm; right: 3mm; font-size: 22pt; color: #0B6E8A; font-family: 'Times New Roman', serif; font-weight: 700; line-height: 1; opacity: 0.25; }
-.rx-right-section { margin-bottom: 3mm; }
-.rx-right-label { font-size: 9pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1.5mm; text-transform: uppercase; letter-spacing: 0.2px; }
-.rx-right-content { font-size: 9pt; color: #111; white-space: pre-wrap; min-height: 14mm; line-height: 1.5; padding: 1mm 0; }
-.rx-empty-lines { display: flex; flex-direction: column; gap: 4mm; }
+.rx-right-col { flex: 1; padding: 1.5mm 3mm; display: flex; flex-direction: column; gap: 0; position: relative; }
+.rx-symbol { position: absolute; top: 1.5mm; right: 3mm; font-size: 20pt; color: #0B6E8A; font-family: 'Times New Roman', serif; font-weight: 700; line-height: 1; opacity: 0.25; }
+.rx-right-section { margin-bottom: 2mm; }
+.rx-right-label { font-size: 8.5pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1mm; text-transform: uppercase; letter-spacing: 0.2px; }
+.rx-right-content { font-size: 8.5pt; color: #111; white-space: pre-wrap; min-height: 10mm; line-height: 1.4; padding: 0.5mm 0; }
+.rx-empty-lines { display: flex; flex-direction: column; gap: 3mm; }
 .rx-dline { border-bottom: 0.5pt dashed #bbb; width: 100%; }
-.rx-complaints-content { min-height: 18mm; }
-.rx-diagnosis-content { min-height: 18mm; }
+.rx-complaints-content { min-height: 12mm; }
+.rx-diagnosis-content { min-height: 12mm; }
 
-.rx-rx-section { margin-bottom: 3mm; }
-.rx-med-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
-.rx-med-th { background: #0B6E8A; color: #fff; font-size: 8pt; font-weight: 600; padding: 1.5mm 2mm; border: 0.5pt solid #0B6E8A; text-align: left; white-space: nowrap; }
-.rx-med-td { border: 0.5pt solid #ccc; padding: 1.5mm 2mm; font-size: 8.5pt; vertical-align: top; }
+.rx-rx-section { margin-bottom: 2mm; }
+.rx-med-table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+.rx-med-th { background: #0B6E8A; color: #fff; font-size: 7.5pt; font-weight: 600; padding: 1mm 1.5mm; border: 0.5pt solid #0B6E8A; text-align: left; white-space: nowrap; }
+.rx-med-td { border: 0.5pt solid #ccc; padding: 1mm 1.5mm; font-size: 8pt; vertical-align: top; }
 .rx-med-row-even td { background: #F0F7FA; }
-.rx-med-sno { width: 6mm; text-align: center; }
-.rx-med-drug { min-width: 32mm; }
-.rx-med-instr { min-width: 18mm; }
+.rx-med-sno { width: 5mm; text-align: center; }
+.rx-med-drug { min-width: 28mm; }
+.rx-med-instr { min-width: 16mm; }
 
-.rx-advice-section { margin-bottom: 3mm; }
-.rx-advice-label { font-size: 8.5pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1.5mm; text-transform: uppercase; }
-.rx-advice-line { font-size: 8.5pt; color: #222; margin-bottom: 0.8mm; line-height: 1.4; }
+.rx-advice-section { margin-bottom: 2mm; }
+.rx-advice-label { font-size: 8pt; font-weight: 700; color: #0B6E8A; margin-bottom: 1mm; text-transform: uppercase; }
+.rx-advice-line { font-size: 8pt; color: #222; margin-bottom: 0.6mm; line-height: 1.3; }
 
-.rx-followup { font-size: 8.5pt; color: #111; margin-bottom: 3mm; padding: 1.5mm 2mm; background: #FFF8DC; border-left: 2pt solid #F59E0B; }
+.rx-followup { font-size: 8pt; color: #111; margin-bottom: 2mm; padding: 1mm 1.5mm; background: #FFF8DC; border-left: 2pt solid #F59E0B; }
 
-.rx-signature-block { text-align: right; padding-top: 3mm; margin-top: auto; }
-.rx-sig-line { font-size: 9pt; color: #333; margin-bottom: 6mm; }
-.rx-sig-name { font-size: 12pt; font-weight: 700; color: #0B6E8A; font-family: 'Times New Roman', Georgia, serif; font-style: italic; }
-.rx-sig-qual { font-size: 8.5pt; color: #333; font-weight: 500; }
+.rx-signature-block { text-align: right; padding-top: 2mm; margin-top: auto; }
+.rx-sig-line { font-size: 8.5pt; color: #333; margin-bottom: 4mm; }
+.rx-sig-name { font-size: 11pt; font-weight: 700; color: #0B6E8A; font-family: 'Times New Roman', Georgia, serif; font-style: italic; }
+.rx-sig-qual { font-size: 8pt; color: #333; font-weight: 500; }
 
-.rx-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 2mm; padding-top: 1.5mm; border-top: 0.5pt solid #999; font-size: 7pt; color: #555; }
+.rx-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5mm; padding-top: 1mm; border-top: 0.5pt solid #999; font-size: 6.5pt; color: #555; }
 .rx-footer-note { font-style: italic; }
 .rx-footer-timing { font-weight: 600; color: #0B6E8A; }
 
-/* ═══ PRINT ═══ */
+/* ═══ PRINT - Force single A4 portrait page ═══ */
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   body { margin: 0; padding: 0; background: white; }
-  .rx-page { box-shadow: none; width: 210mm; min-height: 297mm; margin: 0; padding: 8mm 8mm 6mm 8mm; }
+
+  /* Hide everything except the rx-page */
+  #root > *:not([class*="rx-page"]) { display: none !important; }
   .no-print { display: none !important; }
-  @page { size: A4 portrait; margin: 0; }
+
+  .rx-page {
+    box-shadow: none;
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 5mm 6mm;
+    box-sizing: border-box;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
 }

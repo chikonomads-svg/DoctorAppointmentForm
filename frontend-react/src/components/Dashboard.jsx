@@ -2,10 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-/**
- * Dashboard — Arogya Clinic Dashboard View
- * Design from Figma: stat bento grid + recent prescriptions table + bottom cards
- */
 export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavigate }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,12 +21,7 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
-  const demoPatients = stats?.recent_patients?.length > 0 ? stats.recent_patients : [
-    { id: '0842', patient_name: 'Ananya Singh', patient_age: '28', patient_sex: 'Female', provisional_diagnosis: 'Acute Pharyngitis', saved_at: '2023-10-24' },
-    { id: '0841', patient_name: 'Rahul Kapoor', patient_age: '45', patient_sex: 'Male', provisional_diagnosis: 'Hypertension', saved_at: '2023-10-24' },
-    { id: '0840', patient_name: 'Vikram Prasad', patient_age: '52', patient_sex: 'Male', provisional_diagnosis: 'Type 2 Diabetes', saved_at: '2023-10-24' },
-    { id: '0839', patient_name: 'Sana Mirza', patient_age: '12', patient_sex: 'Female', provisional_diagnosis: 'Mild Viral Fever', saved_at: '2023-10-23' },
-  ];
+  const recentPatients = stats?.recent_patients || [];
 
   const getInitials = (name) => {
     if (!name) return '?';
@@ -70,7 +61,7 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
             <span className="dash-stat-icon" style={{ color: 'var(--primary)' }}>groups</span>
             <span className="dash-stat-label" style={{ color: 'var(--primary)' }}>Total</span>
           </div>
-          <div className="dash-stat-value">{stats?.total_patients || '1,284'}</div>
+          <div className="dash-stat-value">{stats?.total_patients ?? '—'}</div>
           <div className="dash-stat-sub">Total Patients</div>
           <div className="dash-stat-bar" style={{ background: 'var(--primary-fixed)' }}>
             <div className="dash-stat-bar-track primary" style={{ width: '70%' }}></div>
@@ -81,7 +72,7 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
             <span className="dash-stat-icon" style={{ color: 'var(--success)' }}>today</span>
             <span className="dash-stat-label" style={{ color: 'var(--success)' }}>Today</span>
           </div>
-          <div className="dash-stat-value">{stats?.today || '42'}</div>
+          <div className="dash-stat-value">{stats?.today ?? '—'}</div>
           <div className="dash-stat-sub">Today's Count</div>
           <div className="dash-stat-bar" style={{ background: 'var(--success-bg)' }}>
             <div className="dash-stat-bar-track success" style={{ width: '45%' }}></div>
@@ -92,7 +83,7 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
             <span className="dash-stat-icon" style={{ color: 'var(--purple)' }}>date_range</span>
             <span className="dash-stat-label" style={{ color: 'var(--purple)' }}>Weekly</span>
           </div>
-          <div className="dash-stat-value">{stats?.this_week || '218'}</div>
+          <div className="dash-stat-value">{stats?.this_week ?? '—'}</div>
           <div className="dash-stat-sub">This Week's Count</div>
           <div className="dash-stat-bar" style={{ background: 'var(--purple-bg)' }}>
             <div className="dash-stat-bar-track purple" style={{ width: '60%' }}></div>
@@ -103,7 +94,7 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
             <span className="dash-stat-icon" style={{ color: 'var(--warning)' }}>person_pin</span>
             <span className="dash-stat-label" style={{ color: 'var(--warning)' }}>Stats</span>
           </div>
-          <div className="dash-stat-value">{stats?.avg_age ? `${stats.avg_age}` : '34.2'}</div>
+          <div className="dash-stat-value">{stats?.avg_age ?? '—'}</div>
           <div className="dash-stat-sub">Average Age</div>
           <div className="dash-stat-bar" style={{ background: 'var(--warning-bg)' }}>
             <div className="dash-stat-bar-track warning" style={{ width: '82%' }}></div>
@@ -119,10 +110,6 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
             <button className="btn btn-primary" onClick={onNewConsultation}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
               New Prescription
-            </button>
-            <button className="btn btn-secondary">
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
-              Filter
             </button>
           </div>
         </div>
@@ -153,7 +140,14 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
               </tr>
             </thead>
             <tbody>
-              {demoPatients.map((p, i) => (
+              {!loading && !error && recentPatients.length === 0 && (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: 'var(--on-surface-variant)' }}>
+                    No prescriptions found yet. Start by creating a new prescription.
+                  </td>
+                </tr>
+              )}
+              {recentPatients.map((p, i) => (
                 <tr key={p.id || i} onClick={() => onEnterForm(p.id)}>
                   <td><span className="dash-row-id">{p.id?.slice(-4) || String(i + 1).padStart(4, '0')}</span></td>
                   <td>
@@ -182,22 +176,17 @@ export default function Dashboard({ user, onEnterForm, onNewConsultation, onNavi
                     <button className="dash-action-btn primary" onClick={(e) => { e.stopPropagation(); onEnterForm(p.id); }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>visibility</span>
                     </button>
-                    <button className="dash-action-btn default" onClick={(e) => { e.stopPropagation(); }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>print</span>
-                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className="dash-table-footer">
-          <span>Showing {demoPatients.length} of {stats?.total_patients || '28'} records</span>
-          <div className="dash-pagination">
-            <button disabled><span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span></button>
-            <button><span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span></button>
+        {!loading && (
+          <div className="dash-table-footer">
+            <span>Showing {recentPatients.length} of {stats?.total_patients || '0'} records</span>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ── Bottom Cards ── */}

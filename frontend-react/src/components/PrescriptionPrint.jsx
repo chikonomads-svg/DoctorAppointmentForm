@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './PrescriptionPrint.css';
 
 export default function PrescriptionPrint({ data = {} }) {
+  const pageRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    function doFit() {
+      const el = pageRef.current;
+      if (!el) return;
+      // A4 printable height ≈ 279mm (297mm - 2*9mm margins)
+      const maxH = 279;
+      const actualH = el.scrollHeight * 0.264583; // px → mm
+      if (actualH > maxH) {
+        setScale(+(maxH / actualH * 0.95).toFixed(3));
+      } else {
+        setScale(1);
+      }
+    }
+    // Delay to let content render
+    const t = setTimeout(doFit, 50);
+    window.addEventListener('resize', doFit);
+    return () => { clearTimeout(t); window.removeEventListener('resize', doFit); };
+  }, [data]);
+
   const {
     patient_name = '', patient_age = '', patient_sex = '',
     patient_weight = '', patient_address = '', patient_date = '',
@@ -38,7 +60,7 @@ export default function PrescriptionPrint({ data = {} }) {
   const noAddictions = !cb_smoking && !cb_alcohol && !cb_tobacco && !cb_iv_drug;
 
   return (
-    <div className="rx-page">
+    <div className="rx-page" ref={pageRef} style={scale < 1 ? { transform: `scale(${scale})`, transformOrigin: 'top left', width: `${100 / scale}%` } : {}}>
 
       {/* HEADER — 3 equal sections */}
       <div className="rx-header">
